@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && cController.isGrounded)
             bJumping = true;
     }
 	
