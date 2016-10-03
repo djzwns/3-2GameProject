@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour {
     public float fSlowly = 0.5f;
     public float fJumpForce = 5f;
 
+    public float fPushPower = 2.0f;
+
     Vector3 vMovement;
     Vector3 vGravity;
     CharacterController cController;
@@ -20,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetButtonDown("Jump") && cController.isGrounded)
+        if (Input.GetButtonDown("Jump")/* && cController.isGrounded*/)
             bJumping = true;
     }
 	
@@ -67,5 +69,20 @@ public class PlayerController : MonoBehaviour {
         }
 
         vMovement += vGravity;
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody body = hit.collider.attachedRigidbody;
+
+        // 리지드바디 없거나 키네틱이면 안밈
+        if (body == null || body.isKinematic)
+            return;
+
+        if (hit.moveDirection.y < -0.3f)
+            return;
+
+        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
+        body.velocity = pushDir * fPushPower;
     }
 }
