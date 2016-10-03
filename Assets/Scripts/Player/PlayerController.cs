@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour {
     CharacterController cController;
     
     bool bJumping = false;
+    bool bPulling = false;
 
     
 	void Awake () {
@@ -24,6 +25,8 @@ public class PlayerController : MonoBehaviour {
     {
         if (Input.GetButtonDown("Jump")/* && cController.isGrounded*/)
             bJumping = true;
+
+        bPulling = Input.GetKey(KeyCode.Space);
     }
 	
 	void FixedUpdate ()
@@ -71,18 +74,26 @@ public class PlayerController : MonoBehaviour {
         vMovement += vGravity;
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
+    public bool IsPull()
     {
-        Rigidbody body = hit.collider.attachedRigidbody;
-
-        // 리지드바디 없거나 키네틱이면 안밈
-        if (body == null || body.isKinematic)
-            return;
-
-        if (hit.moveDirection.y < -0.3f)
-            return;
-
-        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
-        body.velocity = pushDir * fPushPower;
+        return bPulling;
     }
+
+    //void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    Rigidbody body = hit.collider.attachedRigidbody;
+
+    //    hitTransform = null;
+
+    //    // 리지드바디 없거나 키네틱이면 안밈
+    //    if (body == null || body.isKinematic)
+    //        return;
+
+    //    if (hit.moveDirection.y < -0.3f)
+    //        return;
+
+    //    hitTransform = hit.transform;
+    //    //Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
+    //    //body.velocity = pushDir * fPushPower;
+    //}
 }
