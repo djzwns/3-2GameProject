@@ -2,7 +2,17 @@
 using System.Collections;
 
 public class Object : MonoBehaviour {
+    
+    public enum EInteraction
+    {        // 16진수    // 2진수
+        Fire    = 0x01,   // 00001
+        Water   = 0x02,   // 00010
+        Earth   = 0x04,   // 00100
+        Wind    = 0x08,   // 01000
+        Move    = 0x10,   // 10000
+    }
 
+    [EnumFlag] public EInteraction eInter;
     bool bPlayerPulling = false;
 
     PlayerController player;
@@ -16,7 +26,7 @@ public class Object : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         Follow();
 	}
 
@@ -32,11 +42,14 @@ public class Object : MonoBehaviour {
 
     void Follow()
     {
-        bPlayerPulling = player.IsPull();
-        Debug.Log(CanPull());
-        if (CanPull() && bPlayerPulling)
+        if (EnumFlagAttribute.HasFlag(eInter, EInteraction.Move))
         {
-            transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * 3);
+            bPlayerPulling = player.IsPull();
+            Debug.Log(CanPull());
+            if (CanPull() && bPlayerPulling)
+            {
+                transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * 3);
+            }
         }
     }
 }
