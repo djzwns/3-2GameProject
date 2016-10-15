@@ -7,14 +7,13 @@ public class PlayerController : MonoBehaviour {
     public float fSlowly = 0.5f;
     public float fJumpForce = 5f;
 
-    public float fPushPower = 2.0f;
-
     Vector3 vMovement;
     Vector3 vGravity;
     CharacterController cController;
     
     bool bJumping = false;
     bool bPulling = false;
+    bool bClimbing = false;
 
     
 	void Awake () {
@@ -55,7 +54,7 @@ public class PlayerController : MonoBehaviour {
     void Jump()
     {
         // 땅에 있지 않으면 중력작용
-        if (!cController.isGrounded)
+        if (!cController.isGrounded && !bClimbing)
         {
             vGravity += Physics.gravity * Time.deltaTime;
         }
@@ -79,21 +78,8 @@ public class PlayerController : MonoBehaviour {
         return bPulling;
     }
 
-    //void OnControllerColliderHit(ControllerColliderHit hit)
-    //{
-    //    Rigidbody body = hit.collider.attachedRigidbody;
-
-    //    hitTransform = null;
-
-    //    // 리지드바디 없거나 키네틱이면 안밈
-    //    if (body == null || body.isKinematic)
-    //        return;
-
-    //    if (hit.moveDirection.y < -0.3f)
-    //        return;
-
-    //    hitTransform = hit.transform;
-    //    //Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
-    //    //body.velocity = pushDir * fPushPower;
-    //}
+    public void SetClimbing(bool _bClimbing)
+    {
+        bClimbing = _bClimbing;
+    }
 }
