@@ -11,7 +11,7 @@ public class Fire : MonoBehaviour {
             obj = coll.GetComponent<Object>();
 
             // 오브젝트가 불에 영향을 받으면 실행
-            if (EnumFlagAttribute.HasFlag(obj.eInter, Object.EInteraction.Fire))
+            if (EnumFlagAttribute.HasFlag(obj.eInter, Object.EEnvironmentAction.Fire))
             {
                 Destroy(coll.gameObject);
             }
