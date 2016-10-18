@@ -40,6 +40,10 @@ public class PlayerController : MonoBehaviour {
 
         // 최종 위치 적용
         cController.Move(vMovement * Time.deltaTime);
+        
+        // z축 고정
+        if (transform.position.z != 0)
+            transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
     }
 
     void Move(float horizon)
