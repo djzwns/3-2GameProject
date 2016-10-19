@@ -14,14 +14,23 @@ public class Object : MonoBehaviour {
     public enum EMoveAction
     {
         Move    = 0x01,   // 00000001
-        Left    = 0x02,   // 00000010
-        Right   = 0x04    // 00000100
+        Rotate  = 0x02    // 00000010
+    }
+
+    public enum EQuakeAction
+    {
+        Left    = 0x01,   // 00000001
+        Right   = 0x02,   // 00000010
+        Drop    = 0x04,   // 00000100
+        Destroy = 0x08    // 00001000
     }
 
     [EnumFlag] public EEnvironmentAction eInter;
     [EnumFlag] public EMoveAction eMove;
+    [EnumFlag] public EQuakeAction eEarthAction;
 
     public float fMovePower = 2.0f;
+    public float fDestroyTime = 1.0f;
 
     bool bPlayerPulling = false;
 
@@ -73,13 +82,22 @@ public class Object : MonoBehaviour {
     {
         if (eq != null && eq.Quaking())
         {
-            if (EnumFlagAttribute.HasFlag(eMove, EMoveAction.Left))
+            if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Left))
             {
                 transform.Translate(Vector3.left * fMovePower * Time.deltaTime);
             }
-            else if (EnumFlagAttribute.HasFlag(eMove, EMoveAction.Right))
+            else if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Right))
             {
                 transform.Translate(Vector3.right * fMovePower * Time.deltaTime);
+            }
+
+
+            if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Drop))
+            {
+                transform.GetComponent<Rigidbody>().useGravity = true;
+
+                if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Destroy))
+                    Destroy(gameObject, fDestroyTime);
             }
         }
     }
