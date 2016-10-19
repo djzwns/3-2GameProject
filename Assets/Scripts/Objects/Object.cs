@@ -39,6 +39,7 @@ public class Object : MonoBehaviour {
 
     float fDistance;
     float fCanFollowDist = 2.0f;
+    public float fCanFollowDistMargin = 1.0f;
 
     // Use this for initialization
     void Awake () {
@@ -46,6 +47,8 @@ public class Object : MonoBehaviour {
 
         if (EnumFlagAttribute.HasFlag(eInter, EEnvironmentAction.Earth))
             eq = GameObject.Find("Camera").GetComponent<EarthQuake>();
+
+        fCanFollowDist = player.GetComponent<Collider>().bounds.size.x * 0.5f + gameObject.GetComponent<Collider>().bounds.size.x * 0.5f + fCanFollowDistMargin;
     }
 	
 	// Update is called once per frame
@@ -73,7 +76,7 @@ public class Object : MonoBehaviour {
             Debug.Log(CanPull());
             if (CanPull() && bPlayerPulling)
             {
-                transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * 3);
+                transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * 3f);
             }
         }
     }
