@@ -19,7 +19,6 @@ public class Trap : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
-        Debug.Log(coll.gameObject.name);
         if (coll.gameObject.tag == "Player")
         {
             tempTrap = (GameObject) Instantiate(trap, trapPosition.transform.position, Quaternion.identity);
