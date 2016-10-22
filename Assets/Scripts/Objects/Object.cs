@@ -73,7 +73,6 @@ public class Object : MonoBehaviour {
         if (EnumFlagAttribute.HasFlag(eMove, EMoveAction.Move))
         {
             bPlayerPulling = player.IsPull();
-            Debug.Log(CanPull());
             if (CanPull() && bPlayerPulling)
             {
                 transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * 3f);
