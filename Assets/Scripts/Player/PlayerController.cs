@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : Singleton<PlayerController> {
 
     public float fSpeed = 5f;
     public float fSlowly = 0.5f;

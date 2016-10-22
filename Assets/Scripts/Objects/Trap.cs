@@ -21,7 +21,8 @@ public class Trap : MonoBehaviour {
     {
         if (coll.gameObject.tag == "Player")
         {
-            tempTrap = (GameObject) Instantiate(trap, trapPosition.transform.position, Quaternion.identity);
+            if (tempTrap == null)
+                tempTrap = (GameObject)Instantiate(trap, trapPosition.transform.position, Quaternion.identity);
         }
     }
 }
