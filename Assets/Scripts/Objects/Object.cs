@@ -85,6 +85,7 @@ public class Object : MonoBehaviour {
     {
         if (eq != null && eq.Quaking())
         {
+            transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
             if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Left))
             {
                 transform.Translate(Vector3.left * fMovePower * Time.deltaTime);
@@ -97,7 +98,6 @@ public class Object : MonoBehaviour {
 
             if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Drop))
             {
-                transform.GetComponent<Rigidbody>().useGravity = true;
 
                 if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Destroy))
                     Destroy(gameObject, fDestroyTime);
