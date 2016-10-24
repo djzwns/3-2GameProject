@@ -75,6 +75,7 @@ public class Object : MonoBehaviour {
             bPlayerPulling = player.IsPull();
             if (CanPull() && bPlayerPulling)
             {
+                transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
                 transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * 3f);
             }
         }
