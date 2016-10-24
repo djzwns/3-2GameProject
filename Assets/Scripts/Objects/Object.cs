@@ -32,14 +32,15 @@ public class Object : MonoBehaviour {
     public float fMovePower = 2.0f;
     public float fDestroyTime = 1.0f;
 
-    bool bPlayerPulling = false;
+    int bPlayerPulling;
 
     PlayerController player;
     EarthQuake eq;
 
+    float fGapX;
     float fDistance;
     float fCanFollowDist = 2.0f;
-    public float fCanFollowDistMargin = 1.0f;
+    float fCanFollowDistMargin = 0.7f;
 
     // Use this for initialization
     void Awake () {
@@ -73,10 +74,21 @@ public class Object : MonoBehaviour {
         if (EnumFlagAttribute.HasFlag(eMove, EMoveAction.Move))
         {
             bPlayerPulling = player.IsPull();
-            if (CanPull() && bPlayerPulling)
+            if (bPlayerPulling != 0 && CanPull())
             {
-                transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
-                transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * 3f);
+                transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY;
+
+                if (PullnPush() < 0)
+                {
+                    Vector3 vTargetPosition = new Vector3(player.transform.position.x, transform.position.y);
+                    transform.position = Vector3.Lerp(transform.position, vTargetPosition, Time.deltaTime * 4f);
+                }
+                else if (PullnPush() > 0)
+                {
+                    transform.position = new Vector3(transform.position.x - fGapX * 0.04f, transform.position.y);
+                }
+                else
+                    FreezeObject();
             }
         }
     }
@@ -103,5 +115,40 @@ public class Object : MonoBehaviour {
                     Destroy(gameObject, fDestroyTime);
             }
         }
+    }
+
+    void UnFreezeObject()
+    {
+        transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
+    }
+
+    void FreezeObject()
+    {
+        transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    
+    int PullnPush()
+    {
+        // x좌표의 차이, 음수 값이면 플레이어가 왼쪽
+        fGapX = player.transform.position.x - transform.position.x;
+
+        // 당길 때
+        if (fGapX < 0 && bPlayerPulling < 0)
+            return -1;
+
+        if (fGapX > 0 && bPlayerPulling > 0)
+            return -1;
+
+
+        // 밀 때
+        if (fGapX < 0 && bPlayerPulling > 0)
+            return 1;
+
+        if (fGapX > 0 && bPlayerPulling < 0)
+            return 1;
+
+        // 아무것도 아닐 때
+        return 0;
     }
 }

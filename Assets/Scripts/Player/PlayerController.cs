@@ -6,6 +6,7 @@ public class PlayerController : Singleton<PlayerController> {
     public float fSpeed = 5f;
     public float fSlowly = 0.5f;
     public float fJumpForce = 5f;
+    float fHorizon;
 
     Vector3 vMovement;
     Vector3 vGravity;
@@ -30,10 +31,10 @@ public class PlayerController : Singleton<PlayerController> {
 	
 	void FixedUpdate ()
     {
-        float horizon = Input.GetAxisRaw("Horizontal");
+        fHorizon = Input.GetAxisRaw("Horizontal");
 
         // 좌우 이동
-        Move(horizon);
+        Move(fHorizon);
 
         // 점프
         Jump();
@@ -50,7 +51,10 @@ public class PlayerController : Singleton<PlayerController> {
     {
         vMovement.Set(horizon, 0f, 0f);
         
-        vMovement = vMovement.normalized * fSpeed;
+        if(IsPull() != 0)
+            vMovement = vMovement.normalized * fSpeed * 0.6f;
+        else
+            vMovement = vMovement.normalized * fSpeed;
 
         vMovement = transform.TransformDirection(vMovement);
     }
@@ -77,9 +81,18 @@ public class PlayerController : Singleton<PlayerController> {
         vMovement += vGravity;
     }
 
-    public bool IsPull()
+    public int IsPull()
     {
-        return bPulling;
+        if (bPulling)
+        {
+            if(fHorizon < 0)
+                return -1;
+            if (fHorizon > 0)
+                return 1;
+
+            return 0;
+        }
+        return 0;
     }
 
     public void SetClimbing(bool _bClimbing)
