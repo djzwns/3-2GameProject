@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class PlayerController : Singleton<PlayerController> {
+    PlayerAnimManager anim;
 
     public float fSpeed = 5f;
     public float fSlowly = 0.5f;
@@ -19,12 +20,12 @@ public class PlayerController : Singleton<PlayerController> {
     
 	void Awake () {
         cController = GetComponent<CharacterController>();
+        anim = PlayerAnimManager.Instance;
 	}
 
     void Update()
     {
-        if (Input.GetButtonDown("Jump")/* && cController.isGrounded*/)
-            bJumping = true;
+        bJumping = Input.GetButtonDown("Jump");
 
         bPulling = Input.GetKey(KeyCode.Space);
     }
@@ -41,7 +42,7 @@ public class PlayerController : Singleton<PlayerController> {
 
         // 최종 위치 적용
         cController.Move(vMovement * Time.deltaTime);
-        
+
         // z축 고정
         if (transform.position.z != 0)
             transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
@@ -50,13 +51,15 @@ public class PlayerController : Singleton<PlayerController> {
     void Move(float horizon)
     {
         vMovement.Set(horizon, 0f, 0f);
-        
+
         if(IsPull() != 0)
             vMovement = vMovement.normalized * fSpeed * 0.6f;
         else
             vMovement = vMovement.normalized * fSpeed;
 
-        vMovement = transform.TransformDirection(vMovement);
+        anim.Walk(horizon);
+
+        //vMovement = transform.TransformDirection(vMovement);
     }
 
     void Jump()
@@ -70,6 +73,7 @@ public class PlayerController : Singleton<PlayerController> {
         else
         {
             vGravity = Vector3.zero;
+            anim.Jump(bJumping);
 
             if (bJumping)
             {

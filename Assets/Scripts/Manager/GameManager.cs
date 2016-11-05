@@ -19,7 +19,7 @@ public class GameManager : Singleton<GameManager> {
     {
         iPiecesOfToy = FindObjectsOfType(typeof(ToyPiece)).Length;
         iToyCount = iPiecesOfToy;
-        player = new Player();
+        player = ScriptableObject.CreateInstance<Player>();//new Player();
     }
 
     public void CollectToy()
