@@ -4,7 +4,9 @@ using System.Collections;
 public class GameManager : Singleton<GameManager> {
     private int iPiecesOfToy;
     private int iToyCount;
+
     public Texture[] lifeIcon;
+
     Player player;
     public Player getplayer
     {
@@ -15,11 +17,19 @@ public class GameManager : Singleton<GameManager> {
             return null;
         }
     }
+
+    public float fCloudSpeed = 1f;
+
     void Start()
     {
         iPiecesOfToy = FindObjectsOfType(typeof(ToyPiece)).Length;
         iToyCount = iPiecesOfToy;
         player = ScriptableObject.CreateInstance<Player>();//new Player();
+    }
+
+    void Update()
+    {
+        Borodar.FarlandSkies.LowPoly.SkyboxController.Instance.CloudsRotation = Time.time * fCloudSpeed; 
     }
 
     public void CollectToy()
