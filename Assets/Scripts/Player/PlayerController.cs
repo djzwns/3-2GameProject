@@ -25,8 +25,6 @@ public class PlayerController : Singleton<PlayerController> {
 
     void Update()
     {
-        bJumping = Input.GetButtonDown("Jump");
-
         bPulling = Input.GetKey(KeyCode.Space);
     }
 	
@@ -73,11 +71,16 @@ public class PlayerController : Singleton<PlayerController> {
         else
         {
             vGravity = Vector3.zero;
-            anim.Jump(bJumping);
 
-            if (bJumping)
+            if (!Input.GetButton("Jump"))
+            {
+                bJumping = true;
+                anim.Jump(false);
+            }
+            else if (bJumping)
             {
                 vGravity.y = fJumpForce;
+                anim.Jump(true);
                 bJumping = false;
             }
         }
