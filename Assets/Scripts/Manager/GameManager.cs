@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager> {
     private int iPiecesOfToy;
@@ -55,11 +55,24 @@ public class GameManager : Singleton<GameManager> {
         // clear 시
         if (iToyCount == 0)
         {
-            GUI.Box(new Rect(Screen.width * 0.5f - 60, Screen.height * 0.5f, 120, 30), "Clear");
+            if (GUI.Button(new Rect(Screen.width * 0.5f - 60, Screen.height * 0.5f, 120, 30), "Clear"))
+            {
+                int index = SceneManager.GetActiveScene().buildIndex + 1;
+                if (index != 100)
+                    SceneManager.LoadScene(index);
+                else
+                {
+                }
+            }
         }
         else if (player.CurrentLife <= 0)
         {
-            GUI.Box(new Rect(Screen.width * 0.5f - 60, Screen.height * 0.5f, 120, 30), "Failed");
+            PlayerAnimManager.Instance.Die();
+            PlayerController.Instance.Die();
+            if(GUI.Button(new Rect(Screen.width * 0.5f - 60, Screen.height * 0.5f, 120, 30), "Failed"))
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
     }
 }

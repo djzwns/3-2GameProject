@@ -16,6 +16,7 @@ public class PlayerController : Singleton<PlayerController> {
     bool bJumping = false;
     bool bPulling = false;
     bool bClimbing = false;
+    bool bDead = false;
 
     
 	void Awake () {
@@ -48,16 +49,19 @@ public class PlayerController : Singleton<PlayerController> {
 
     void Move(float horizon)
     {
-        vMovement.Set(horizon, 0f, 0f);
+        if (!bDead)
+        {
+            vMovement.Set(horizon, 0f, 0f);
 
-        if(IsPull() != 0)
-            vMovement = vMovement.normalized * fSpeed * 0.6f;
-        else
-            vMovement = vMovement.normalized * fSpeed;
+            if (IsPull() != 0)
+                vMovement = vMovement.normalized * fSpeed * 0.6f;
+            else
+                vMovement = vMovement.normalized * fSpeed;
 
-        anim.Walk(horizon);
+            anim.Walk(horizon);
 
-        //vMovement = transform.TransformDirection(vMovement);
+            //vMovement = transform.TransformDirection(vMovement);
+        }
     }
 
     void Jump()
@@ -77,7 +81,7 @@ public class PlayerController : Singleton<PlayerController> {
                 bJumping = true;
                 anim.Jump(false);
             }
-            else if (bJumping)
+            else if (bJumping && !bDead)
             {
                 vGravity.y = fJumpForce;
                 anim.Jump(true);
@@ -105,5 +109,10 @@ public class PlayerController : Singleton<PlayerController> {
     public void SetClimbing(bool _bClimbing)
     {
         bClimbing = _bClimbing;
+    }
+
+    public void Die()
+    {
+        bDead = true;
     }
 }
