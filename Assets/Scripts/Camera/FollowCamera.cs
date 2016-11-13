@@ -36,7 +36,7 @@ public class FollowCamera : MonoBehaviour {
         vMinXY.y = bgBounds.min.y - vCamTopLeft.y;
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         float fCamX = transform.position.x;
         float fCamY = transform.position.y;
