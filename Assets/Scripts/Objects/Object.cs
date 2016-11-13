@@ -32,10 +32,13 @@ public class Object : MonoBehaviour {
     public float fMovePower = 2.0f;
     public float fDestroyTime = 1.0f;
 
-    int bPlayerPulling;
+    int iPlayerPulling;
+    bool bRotating = false;
 
     PlayerController player;
     EarthQuake eq;
+
+    Quaternion target;
 
     float fGapX;
     float fDistance;
@@ -50,6 +53,8 @@ public class Object : MonoBehaviour {
             eq = GameObject.Find("Camera").GetComponent<EarthQuake>();
 
         fCanFollowDist = player.GetComponent<Collider>().bounds.size.x * 0.5f + gameObject.GetComponent<Collider>().bounds.size.x * 0.5f + fCanFollowDistMargin;
+
+        StartCoroutine(RotateObject());
     }
 	
 	// Update is called once per frame
@@ -73,8 +78,8 @@ public class Object : MonoBehaviour {
     {
         if (EnumFlagAttribute.HasFlag(eMove, EMoveAction.Move))
         {
-            bPlayerPulling = player.IsPull();
-            if (bPlayerPulling != 0 && CanPull())
+            iPlayerPulling = player.IsPull();
+            if (iPlayerPulling != 0 && CanPull())
             {
                 transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY;
 
@@ -87,9 +92,9 @@ public class Object : MonoBehaviour {
                 {
                     transform.position = new Vector3(transform.position.x - fGapX * 0.04f, transform.position.y);
                 }
-                else
-                    FreezeObject();
             }
+            else
+                FreezeObject();
         }
     }
 
@@ -134,21 +139,48 @@ public class Object : MonoBehaviour {
         fGapX = player.transform.position.x - transform.position.x;
 
         // 당길 때
-        if (fGapX < 0 && bPlayerPulling < 0)
+        if (fGapX < 0 && iPlayerPulling < 0)
             return -1;
 
-        if (fGapX > 0 && bPlayerPulling > 0)
+        if (fGapX > 0 && iPlayerPulling > 0)
             return -1;
 
 
         // 밀 때
-        if (fGapX < 0 && bPlayerPulling > 0)
+        if (fGapX < 0 && iPlayerPulling > 0)
             return 1;
 
-        if (fGapX > 0 && bPlayerPulling < 0)
+        if (fGapX > 0 && iPlayerPulling < 0)
             return 1;
 
         // 아무것도 아닐 때
         return 0;
+    }
+
+    IEnumerator RotateObject()
+    {
+        if (EnumFlagAttribute.HasFlag(eMove, EMoveAction.Rotate))
+        {
+            while (true)
+            {
+                // 회전 시킬 때 마다 원래의 로테이션 값보다 90도 갱신된 타겟 로테이션으로
+                if (player.bRotating && !bRotating && CanPull())
+                {
+                    target = Quaternion.Euler(Vector3.up * 90f) * transform.rotation;
+                    bRotating = true;
+                }
+                
+                // 회전 시키는 부분.
+                if(bRotating)
+                {
+                    transform.rotation = Quaternion.Lerp(transform.rotation, target, Time.deltaTime * 10f);
+
+                    if (transform.rotation == target)
+                        bRotating = false;
+                }
+
+                yield return new WaitForFixedUpdate();
+            }
+        }
     }
 }

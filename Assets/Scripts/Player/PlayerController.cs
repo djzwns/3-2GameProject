@@ -17,16 +17,19 @@ public class PlayerController : Singleton<PlayerController> {
     bool bPulling = false;
     bool bClimbing = false;
     bool bDead = false;
+    public bool bRotating {get; private set;}
 
     
 	void Awake () {
         cController = GetComponent<CharacterController>();
         anim = PlayerAnimManager.Instance;
+        bRotating = false;
 	}
 
     void Update()
     {
-        bPulling = Input.GetKey(KeyCode.Space);
+        bPulling = Input.GetButton("PullPush");
+        bRotating = Input.GetButton("Rotation");
     }
 	
 	void FixedUpdate ()
