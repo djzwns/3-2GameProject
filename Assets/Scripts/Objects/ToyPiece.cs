@@ -7,7 +7,7 @@ public class ToyPiece : MonoBehaviour {
     {
         if (coll.tag == "Player")
         {
-            GameManager.Instance.CollectToy();
+            ToyManager.Instance.CollectToy();
             PlayerAnimManager.Instance.Dance();
             Destroy(gameObject);
         }

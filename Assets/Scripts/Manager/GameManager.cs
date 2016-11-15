@@ -2,12 +2,11 @@
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager> {
-    private int iPiecesOfToy;
-    private int iToyCount;
-
     public Texture[] lifeIcon;
 
     Player player;
+    ToyManager tm;
+
     public Player getplayer
     {
         get
@@ -22,20 +21,13 @@ public class GameManager : Singleton<GameManager> {
 
     void Start()
     {
-        iPiecesOfToy = FindObjectsOfType(typeof(ToyPiece)).Length;
-        iToyCount = iPiecesOfToy;
         player = ScriptableObject.CreateInstance<Player>();//new Player();
+        tm = ToyManager.Instance;
     }
 
     void Update()
     {
         Borodar.FarlandSkies.LowPoly.SkyboxController.Instance.CloudsRotation = Time.time * fCloudSpeed; 
-    }
-
-    public void CollectToy()
-    {
-        if (iToyCount > 0)
-            --iToyCount;
     }
 
     void OnGUI()
@@ -48,24 +40,7 @@ public class GameManager : Singleton<GameManager> {
             else
                 GUI.DrawTexture(new Rect(30 + (50 * i), 30, 50, 50), lifeIcon[1]);
         }
-
-        // 장난감 조각 현황?
-        GUI.Box(new Rect(Screen.width-150, 30, 120, 30), iPiecesOfToy - iToyCount + "/" + iPiecesOfToy);
-
-        // clear 시
-        if (iToyCount == 0)
-        {
-            if (GUI.Button(new Rect(Screen.width * 0.5f - 60, Screen.height * 0.5f, 120, 30), "Clear"))
-            {
-                int index = SceneManager.GetActiveScene().buildIndex + 1;
-                if (index != 100)
-                    SceneManager.LoadScene(index);
-                else
-                {
-                }
-            }
-        }
-        else if (player.CurrentLife <= 0)
+        if (tm.iPiecesCount > 0 && player.CurrentLife <= 0)
         {
             PlayerAnimManager.Instance.Die();
             PlayerController.Instance.Die();
