@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EarthQuake : MonoBehaviour {
+public class EarthQuake : Singleton<EarthQuake> {
 
     public float coef = 0.2f;
 

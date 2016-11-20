@@ -17,6 +17,7 @@ public class PlayerController : Singleton<PlayerController> {
     bool bPulling = false;
     bool bClimbing = false;
     bool bDead = false;
+    public bool bTalking { get; set; }
     public bool bRotating {get; private set;}
 
     
@@ -24,6 +25,7 @@ public class PlayerController : Singleton<PlayerController> {
         cController = GetComponent<CharacterController>();
         anim = PlayerAnimManager.Instance;
         bRotating = false;
+        bTalking = false;
 	}
 
     void Update()
@@ -52,7 +54,7 @@ public class PlayerController : Singleton<PlayerController> {
 
     void Move(float horizon)
     {
-        if (!bDead)
+        if (!bDead && !bTalking)
         {
             vMovement.Set(horizon, 0f, 0f);
 
@@ -64,6 +66,11 @@ public class PlayerController : Singleton<PlayerController> {
             anim.Walk(horizon);
 
             //vMovement = transform.TransformDirection(vMovement);
+        }
+        else
+        {
+            vMovement.Set(0f, 0f, 0f);
+            anim.Walk(0);
         }
     }
 
@@ -84,7 +91,7 @@ public class PlayerController : Singleton<PlayerController> {
                 bJumping = true;
                 anim.Jump(false);
             }
-            else if (bJumping && !bDead)
+            else if (bJumping && !bDead && !bTalking)
             {
                 vGravity.y = fJumpForce;
                 anim.Jump(true);
