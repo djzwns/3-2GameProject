@@ -4,6 +4,7 @@ using System.Collections;
 public class FollowCamera : MonoBehaviour {
 
     Transform player;
+    new Transform camera;
 
     public float fXSmooth;
     public float fYSmooth;
@@ -16,10 +17,14 @@ public class FollowCamera : MonoBehaviour {
     Vector2 vMaxXY;
     Vector2 vMinXY;
 
+    float fCamtoPlayer;
+
 
     void Awake()
     {
         player = GameObject.Find("Player").transform;
+        camera = transform;
+        fCamtoPlayer = Mathf.Abs(player.position.z - camera.position.z);
 
         // 백그라운드의 bound 를 받아옴
         Bounds bgBounds = GameObject.Find("background").GetComponent<Collider>().bounds;
@@ -38,31 +43,31 @@ public class FollowCamera : MonoBehaviour {
 
     void FixedUpdate()
     {
-        float fCamX = transform.position.x;
-        float fCamY = transform.position.y;
+        float fCamX = camera.position.x;
+        float fCamY = camera.position.y;
 
         // 무조건 따라가지 않음, 캐릭터가 어느정도 움직여야 따라가게
         if(CheckX())
-            fCamX = Mathf.Lerp(transform.position.x, player.position.x, fXSmooth * Time.deltaTime);
+            fCamX = Mathf.Lerp(camera.position.x, player.position.x, fXSmooth * Time.deltaTime);
 
         if(CheckY())
-            fCamY = Mathf.Lerp(transform.position.y, player.position.y, fYSmooth * Time.deltaTime);
+            fCamY = Mathf.Lerp(camera.position.y, player.position.y, fYSmooth * Time.deltaTime);
 
         // min max 값
         fCamX = Mathf.Clamp(fCamX, vMinXY.x, vMaxXY.x);
         fCamY = Mathf.Clamp(fCamY, vMinXY.y, vMaxXY.y);
 
         // 최종 좌표로 카메라 이동
-        transform.position = new Vector3(fCamX, fCamY + fCamPosY, transform.position.z);
+        transform.position = new Vector3(fCamX, fCamY + fCamPosY, player.position.z - fCamtoPlayer);
     }
 
     bool CheckX()
     {
-        return Mathf.Abs(transform.position.x - player.position.x) > fXMargin;
+        return Mathf.Abs(camera.position.x - player.position.x) > fXMargin;
     }
 
     bool CheckY()
     {
-        return Mathf.Abs(transform.position.y - player.position.y) > fYMargin;
+        return Mathf.Abs(camera.position.y - player.position.y) > fYMargin;
     }
 }

@@ -7,6 +7,7 @@ public class PlayerController : Singleton<PlayerController> {
     public float fSpeed = 5f;
     public float fSlowly = 0.5f;
     public float fJumpForce = 5f;
+    public float fFixedZ { get; set; }
     float fHorizon;
 
     Vector3 vMovement;
@@ -26,6 +27,8 @@ public class PlayerController : Singleton<PlayerController> {
         anim = PlayerAnimManager.Instance;
         bRotating = false;
         bTalking = false;
+
+        fFixedZ = 0f;
 	}
 
     void Update()
@@ -49,7 +52,7 @@ public class PlayerController : Singleton<PlayerController> {
 
         // z축 고정
         if (transform.position.z != 0)
-            transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
+            transform.position = new Vector3(transform.position.x, transform.position.y, fFixedZ);
     }
 
     void Move(float horizon)

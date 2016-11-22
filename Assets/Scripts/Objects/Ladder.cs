@@ -7,7 +7,13 @@ public class Ladder : MonoBehaviour {
 
     public float fSpeed = 3.0f;
 
+    PlayerController player;
     Transform target;
+
+    void Start()
+    {
+        player = PlayerController.Instance;
+    }
 
     void OnTriggerStay(Collider coll)
     {
@@ -16,14 +22,14 @@ public class Ladder : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.UpArrow) && !bClimbing)
             {
                 target = coll.transform;
-                target.GetComponent<PlayerController>().SetClimbing(bClimbing = true);
+                player.SetClimbing(bClimbing = true);
                 PlayerAnimManager.Instance.Climb(bClimbing);
                 return;
             }
             // x키 누르면 사다리 내려옴
-            else if (Input.GetKeyDown(KeyCode.X) && bClimbing)
+            else if (Input.GetButton("Jump") && bClimbing)
             {
-                target.GetComponent<PlayerController>().SetClimbing(bClimbing = false);
+                player.SetClimbing(bClimbing = false);
                 target.GetComponent<CharacterController>().stepOffset = 0.3f;
                 PlayerAnimManager.Instance.Climb(bClimbing);
                 target = null;
@@ -32,8 +38,6 @@ public class Ladder : MonoBehaviour {
             if (bClimbing)
             {
                 target.GetComponent<CharacterController>().stepOffset = 0f;
-
-                target.position = new Vector3(transform.position.x, target.position.y, 0f);
 
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
@@ -54,9 +58,8 @@ public class Ladder : MonoBehaviour {
         {
             target.GetComponent<CharacterController>().stepOffset = 0.3f;
             target.Translate(Vector3.forward * Time.deltaTime * 20);
-            target.GetComponent<PlayerController>().SetClimbing(bClimbing = false);
+            player.SetClimbing(bClimbing = false);
             PlayerAnimManager.Instance.Climb(bClimbing);
-            target.position = new Vector3(target.position.x, target.position.y, 0f);
             target = null;
         }
     }

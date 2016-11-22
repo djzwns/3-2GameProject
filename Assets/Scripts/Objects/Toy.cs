@@ -4,6 +4,7 @@ using System.Collections;
 public class Toy : MonoBehaviour {
     Transform trTarget;
     Transform[] childTarget;
+    Transform toyTransform;
 
     Vector3 vTarget;
 
@@ -14,6 +15,8 @@ public class Toy : MonoBehaviour {
 
     void Start()
     {
+        toyTransform = transform;
+
         childTarget = GameObject.Find("Toy").GetComponentsInChildren<Transform>();
         if (childTarget.Length == 1)
         {
@@ -23,7 +26,7 @@ public class Toy : MonoBehaviour {
         {
             for (int i = 1; i < childTarget.Length; ++i)
             {
-                if (transform == childTarget[i])
+                if (toyTransform == childTarget[i])
                 {
                     if (i == 1)
                         trTarget = GameObject.Find("Player").GetComponent<Transform>();
@@ -40,17 +43,17 @@ public class Toy : MonoBehaviour {
 
     void FixedUpdate()
     {
-        float fToyX = transform.position.x;
-        float fToyY = transform.position.y;
+        float fToyX = toyTransform.position.x;
+        float fToyY = toyTransform.position.y;
 
         vTarget = trTarget.transform.position;
 
-        if (Mathf.Abs(transform.position.x - trTarget.transform.position.x) > fXMargin)
+        if (Mathf.Abs(toyTransform.position.x - trTarget.transform.position.x) > fXMargin)
         {
-            fToyX = Mathf.Lerp(transform.position.x, vTarget.x, Time.deltaTime * fSmoothMove);
+            fToyX = Mathf.Lerp(toyTransform.position.x, vTarget.x, Time.deltaTime * fSmoothMove);
         }
-        fToyY = Mathf.Lerp(transform.position.y, vTarget.y, Time.deltaTime * fSmoothMove);
+        fToyY = Mathf.Lerp(toyTransform.position.y, vTarget.y, Time.deltaTime * fSmoothMove);
 
-        transform.position = new Vector3(fToyX, fToyY);
+        toyTransform.position = new Vector3(fToyX, fToyY, trTarget.position.z);
     }
 }

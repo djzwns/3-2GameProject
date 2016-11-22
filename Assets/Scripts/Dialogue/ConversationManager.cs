@@ -3,11 +3,12 @@ using System.Collections;
 
 public class ConversationManager : Singleton<ConversationManager> {
 
+    public GUIStyle style;
+
     bool bTalking = false;
     bool bNextText = false;
 
     ConversationBase currentConversation;
-    public Texture dialogBackGround;
     public string leftName;
     bool bUsed = false;
 
@@ -91,7 +92,7 @@ public class ConversationManager : Singleton<ConversationManager> {
                 GUI.Label(new Rect(0, Screen.height - (iTextboxHeight + textureHeight), textureWidth, textureHeight), currentConversation.DisplayTexture);
 
             // 대화창 그룹
-            GUI.BeginGroup(new Rect(0, Screen.height - iTextboxHeight, iTextboxWidth, iTextboxHeight));
+            GUI.BeginGroup(new Rect(0, Screen.height - iTextboxHeight, iTextboxWidth, iTextboxHeight), style);
 
             // 대화창 뒷배경
             GUI.Box(new Rect(0, 0, iTextboxWidth, iTextboxHeight), "");
