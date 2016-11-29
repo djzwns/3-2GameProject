@@ -81,7 +81,7 @@ public class Object : MonoBehaviour {
             iPlayerPulling = player.IsPull();
             if (iPlayerPulling != 0 && CanPull())
             {
-                transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY;
+                //transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;// ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY;
 
                 if (PullnPush() < 0)
                 {
@@ -93,8 +93,6 @@ public class Object : MonoBehaviour {
                     transform.position = new Vector3(transform.position.x - fGapX * 0.04f, transform.position.y);
                 }
             }
-            else
-                FreezeObject();
         }
     }
 

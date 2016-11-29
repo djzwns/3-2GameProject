@@ -5,7 +5,7 @@ public class MainSceneUI : MonoBehaviour {
 
     public void GameStart()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void GameExit()

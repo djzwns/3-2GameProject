@@ -28,7 +28,7 @@ public class PlayerController : Singleton<PlayerController> {
         bRotating = false;
         bTalking = false;
 
-        fFixedZ = 0f;
+        fFixedZ = transform.position.z;
 	}
 
     void Update()
