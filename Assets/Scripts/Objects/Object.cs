@@ -34,26 +34,26 @@ public class Object : MonoBehaviour {
 
     int iPlayerPulling;
     bool bRotating = false;
+    bool CanPull = false;
 
     PlayerController player;
     EarthQuake eq;
 
     Quaternion target;
 
+    Transform myTransform;
+    Vector3 vTargetPosition;
+
     float fGapX;
-    float fDistance;
-    float fCanFollowDist = 2.0f;
-    float fCanFollowDistMargin = 0.7f;
 
     // Use this for initialization
     void Awake () {
+        myTransform = transform;
         player = GameObject.Find("Player").GetComponent<PlayerController>();
 
         if (EnumFlagAttribute.HasFlag(eInter, EEnvironmentAction.Earth))
             eq = GameObject.Find("Camera").GetComponent<EarthQuake>();
-
-        fCanFollowDist = player.GetComponent<Collider>().bounds.size.x * 0.5f + gameObject.GetComponent<Collider>().bounds.size.x * 0.5f + fCanFollowDistMargin;
-
+        
         StartCoroutine(RotateObject());
     }
 	
@@ -64,33 +64,23 @@ public class Object : MonoBehaviour {
         QuakeMove();
 	}
 
-    bool CanPull()
-    {
-        fDistance = Vector3.Distance(player.transform.position, transform.position);
-
-        if (-fCanFollowDist < fDistance && fDistance < fCanFollowDist)
-            return true;
-        else
-            return false;
-    }
-
     void Follow()
     {
         if (EnumFlagAttribute.HasFlag(eMove, EMoveAction.Move))
         {
             iPlayerPulling = player.IsPull();
-            if (iPlayerPulling != 0 && CanPull())
+            if (iPlayerPulling != 0 && CanPull)
             {
                 //transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;// ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY;
 
                 if (PullnPush() < 0)
                 {
-                    Vector3 vTargetPosition = new Vector3(player.transform.position.x, transform.position.y);
-                    transform.position = Vector3.Lerp(transform.position, vTargetPosition, Time.deltaTime * 4f);
+                    //vTargetPosition = new Vector3(player.transform.position.x, myTransform.position.y);
+                    myTransform.position = Vector3.Lerp(myTransform.position, vTargetPosition, Time.deltaTime * 2f);
                 }
                 else if (PullnPush() > 0)
                 {
-                    transform.position = new Vector3(transform.position.x - fGapX * 0.04f, transform.position.y);
+                    myTransform.position = new Vector3(myTransform.position.x - fGapX * 0.04f, myTransform.position.y);
                 }
             }
         }
@@ -100,14 +90,14 @@ public class Object : MonoBehaviour {
     {
         if (eq != null && eq.Quaking())
         {
-            transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
+            myTransform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
             if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Left))
             {
-                transform.Translate(Vector3.left * fMovePower * Time.deltaTime);
+                myTransform.Translate(Vector3.left * fMovePower * Time.deltaTime);
             }
             else if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Right))
             {
-                transform.Translate(Vector3.right * fMovePower * Time.deltaTime);
+                myTransform.Translate(Vector3.right * fMovePower * Time.deltaTime);
             }
 
 
@@ -122,19 +112,19 @@ public class Object : MonoBehaviour {
 
     void UnFreezeObject()
     {
-        transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
+        myTransform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
     }
 
     void FreezeObject()
     {
-        transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        myTransform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
     }
 
     
     int PullnPush()
     {
         // x좌표의 차이, 음수 값이면 플레이어가 왼쪽
-        fGapX = player.transform.position.x - transform.position.x;
+        fGapX = player.transform.position.x - myTransform.position.x;
 
         // 당길 때
         if (fGapX < 0 && iPlayerPulling < 0)
@@ -162,23 +152,40 @@ public class Object : MonoBehaviour {
             while (true)
             {
                 // 회전 시킬 때 마다 원래의 로테이션 값보다 90도 갱신된 타겟 로테이션으로
-                if (player.bRotating && !bRotating && CanPull())
+                if (player.bRotating && !bRotating && CanPull)
                 {
-                    target = Quaternion.Euler(Vector3.up * 90f) * transform.rotation;
+                    target = Quaternion.Euler(Vector3.up * 90f) * myTransform.rotation;
                     bRotating = true;
                 }
                 
                 // 회전 시키는 부분.
                 if(bRotating)
                 {
-                    transform.rotation = Quaternion.Lerp(transform.rotation, target, Time.deltaTime * 10f);
+                    myTransform.rotation = Quaternion.Lerp(myTransform.rotation, target, Time.deltaTime * 10f);
 
-                    if (transform.rotation == target)
+                    if (myTransform.rotation == target)
                         bRotating = false;
                 }
 
                 yield return new WaitForFixedUpdate();
             }
+        }
+    }
+
+    void OnTriggerStay(Collider coll)
+    {
+        if (coll.tag == "Player")
+        {
+            vTargetPosition = new Vector3(coll.GetComponents<Collider>()[1].bounds.center.x, myTransform.position.y);
+            CanPull = true;
+        }
+    }
+
+    void OnTriggerExit(Collider coll)
+    {
+        if (coll.tag == "Player")
+        {
+            CanPull = false;
         }
     }
 }

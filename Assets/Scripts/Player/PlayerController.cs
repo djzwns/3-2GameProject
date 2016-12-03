@@ -21,6 +21,8 @@ public class PlayerController : Singleton<PlayerController> {
     public bool bTalking { get; set; }
     public bool bRotating {get; private set;}
 
+    bool bReverse;
+
     
 	void Awake () {
         cController = GetComponent<CharacterController>();
@@ -29,6 +31,7 @@ public class PlayerController : Singleton<PlayerController> {
         bTalking = false;
 
         fFixedZ = transform.position.z;
+        bReverse = GameObject.Find("Camera").GetComponent<FollowCamera>().bReverse;
 	}
 
     void Update()
@@ -40,6 +43,7 @@ public class PlayerController : Singleton<PlayerController> {
 	void FixedUpdate ()
     {
         fHorizon = Input.GetAxisRaw("Horizontal");
+        if (bReverse) fHorizon = -fHorizon;
 
         // 좌우 이동
         Move(fHorizon);

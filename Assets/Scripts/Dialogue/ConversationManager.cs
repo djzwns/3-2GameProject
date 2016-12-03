@@ -9,8 +9,8 @@ public class ConversationManager : Singleton<ConversationManager> {
     bool bNextText = false;
 
     ConversationBase currentConversation;
+    string oldFuncName;
     public string leftName;
-    bool bUsed = false;
 
     int iTextboxWidth = Screen.width;
     int iTextboxHeight = (int)(Screen.height * 0.25f);
@@ -53,6 +53,9 @@ public class ConversationManager : Singleton<ConversationManager> {
         {
             currentConversation = conversationLine;
             iNameTextLength = currentConversation.SpeakingCharacterName.Length * 7;
+            
+            Disaster(currentConversation.FunctionName);
+
             yield return new WaitForSeconds(textPassTime);
         }
         player.bTalking = bTalking = false;
@@ -67,15 +70,35 @@ public class ConversationManager : Singleton<ConversationManager> {
         {
             currentConversation = conversation.conversationLines[iLineNumber];
             iNameTextLength = currentConversation.SpeakingCharacterName.Length * 7;
-            if (currentConversation.FunctionName == "Quake" && !bUsed)
-            {
-                EarthQuake.Instance.Quake();
-                bUsed = true;
-            }
+
+            Disaster(currentConversation.FunctionName);
+
             yield return new WaitForFixedUpdate();
         }
 
         player.bTalking = bTalking = false;
+    }
+
+    // 악몽 환경변화 이벤트
+    void Disaster(string disaster)
+    {
+        if (oldFuncName != disaster)
+        {
+            switch (disaster)
+            {
+                case "Quake":
+                    NightmareManager.Instance.Quake(); break;
+
+                case "HellFire":
+                    NightmareManager.Instance.HellFire(); break;
+
+                case "Flood":
+                    NightmareManager.Instance.Flood(); break;
+
+                default: break;
+            }
+            oldFuncName = disaster;
+        }
     }
 
     void OnGUI()
@@ -98,10 +121,10 @@ public class ConversationManager : Singleton<ConversationManager> {
             GUI.Box(new Rect(0, 0, iTextboxWidth, iTextboxHeight), "");
 
             // 이름
-            GUI.Label(new Rect(10, 10, iNameTextLength * 7f, 20), currentConversation.SpeakingCharacterName);
+            GUI.Label(new Rect(30, 20, iNameTextLength * 7f, 20), currentConversation.SpeakingCharacterName);
 
             // 대화
-            GUI.Label(new Rect(20, 30, iTextboxWidth, 20), currentConversation.ConversationText);
+            GUI.Label(new Rect(50, 40, iTextboxWidth, 20), currentConversation.ConversationText);
 
             GUI.EndGroup();
         }

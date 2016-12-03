@@ -32,7 +32,7 @@ public class Door : MonoBehaviour {
 
         // 플레이어 위치 이동
         player.transform.position = linkedDoor.position;
-        player.fFixedZ = linkedDoor.position.z - 0.5f;
+        player.fFixedZ = linkedDoor.GetComponent<Collider>().bounds.center.z;
 
         // 밝아짐
         while (blind.color.a > 0f)

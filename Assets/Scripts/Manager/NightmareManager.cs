@@ -2,13 +2,15 @@
 using System.Collections;
 
 public class NightmareManager : Singleton<NightmareManager> {
+    
     public Transform[] firePositions;
     public GameObject[] fire;
-    EarthQuake eq = EarthQuake.Instance;
+
+    public Transform[] floodPositions;
 
     public void Quake()
     {
-        eq.Quake();
+        EarthQuake.Instance.Quake();
     }
 
     public void HellFire()
@@ -19,7 +21,7 @@ public class NightmareManager : Singleton<NightmareManager> {
         }
     }
 
-    public void Tornado()
+    public void Flood()
     {
     }
 }
