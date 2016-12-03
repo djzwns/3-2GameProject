@@ -7,6 +7,7 @@ public class Flood : Singleton<Flood> {
 
     Player player;
     Transform playerTransform;
+    Transform myTransform;
     float fPlayerYSize;
 
     public Transform[] floodPosition;
@@ -16,16 +17,21 @@ public class Flood : Singleton<Flood> {
     void Start()
     {
         playerTransform = PlayerController.Instance.transform;
+        myTransform = transform;
         fPlayerYSize = playerTransform.GetComponent<Collider>().bounds.size.y * 0.5f;
+    }
+
+    void Swell()
+    {
+        myTransform.position = Vector3.Lerp(myTransform.position, floodPosition[iFloodCount].position, Time.deltaTime * fFloodSpeed);
     }
 
     void FixedUpdate()
     {
-        transform.position = Vector3.Lerp(transform.position, floodPosition[iFloodCount].position, Time.deltaTime * fFloodSpeed);
-
+        Swell();
         if (player != null)
         {
-            if (transform.position.y >= playerTransform.position.y + fPlayerYSize)
+            if (myTransform.position.y >= playerTransform.position.y + fPlayerYSize)
             {
                 spendTime += Time.deltaTime;
                 // 일정 시간마다 피 깎
@@ -50,13 +56,16 @@ public class Flood : Singleton<Flood> {
     {
         if (coll.gameObject.tag == "Player")
             player = GameManager.Instance.getplayer;
+
+        if (coll.gameObject.tag == "Fire")
+            Destroy(coll.gameObject);
     }
 
     void OnTriggerExit(Collider coll)
     {
         if (coll.gameObject.tag == "Player")
         {
-            if (transform.position.y <= playerTransform.position.y)
+            if (myTransform.position.y <= playerTransform.position.y)
                 player = null;
         }
     }
@@ -66,11 +75,11 @@ public class Flood : Singleton<Flood> {
         // 물에 뜨는 오브젝트는 물의 높이와 같게
         if (coll.gameObject.tag == "Object")
         {
-            if (coll.transform.position.y <= transform.position.y &&
+            if (coll.transform.position.y <= myTransform.position.y &&
                 EnumFlagAttribute.HasFlag(coll.GetComponent<Object>().eInter, Object.EEnvironmentAction.Water))
             {
                 Transform obj = coll.transform;
-                obj.position = new Vector3(obj.position.x, transform.position.y);
+                obj.position = new Vector3(obj.position.x, myTransform.position.y);
             }
         }
 

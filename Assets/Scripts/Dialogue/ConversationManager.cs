@@ -93,7 +93,7 @@ public class ConversationManager : Singleton<ConversationManager> {
                     NightmareManager.Instance.HellFire(); break;
 
                 case "Flood":
-                    NightmareManager.Instance.Flood(); break;
+                    NightmareManager.Instance.Swell(); break;
 
                 default: break;
             }
