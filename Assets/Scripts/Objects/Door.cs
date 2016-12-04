@@ -11,12 +11,10 @@ public class Door : MonoBehaviour {
     static bool bMoving = false;
 
     PlayerController player;
-    Image blind;
 
     void Start()
     {
         player = GameObject.Find("Player").GetComponent<PlayerController>();
-        blind = GameObject.Find("blind").GetComponent<Image>();
     }
 
     IEnumerator MoveNextDoor()
@@ -24,22 +22,14 @@ public class Door : MonoBehaviour {
         bMoving = true;
 
         // 어두짐
-        while (blind.color.a < 1f)
-        {
-            blind.color = new Color(blind.color.r, blind.color.g, blind.color.b, blind.color.a + 0.04f);
-            yield return new WaitForSeconds(0.05f);
-        }
+        yield return StageManager.Instance.FadeOut(0.05f);
 
         // 플레이어 위치 이동
         player.transform.position = linkedDoor.position;
         player.fFixedZ = linkedDoor.GetComponent<Collider>().bounds.center.z;
 
         // 밝아짐
-        while (blind.color.a > 0f)
-        {
-            blind.color = new Color(blind.color.r, blind.color.g, blind.color.b, blind.color.a - 0.04f);
-            yield return new WaitForSeconds(0.05f);
-        }
+        yield return StageManager.Instance.FadeIn(0.05f);
 
         bMoving = false;
     }

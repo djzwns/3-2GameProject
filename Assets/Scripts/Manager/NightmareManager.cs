@@ -5,7 +5,15 @@ public class NightmareManager : Singleton<NightmareManager> {
     
     public Transform[] firePositions;
     public GameObject[] fire;
+    
     public int iWaterNumber;
+
+    Flood floodInstance;
+
+    void Start()
+    {
+        floodInstance = Flood.Instance;
+    }
 
     public void Quake()
     {
@@ -28,6 +36,6 @@ public class NightmareManager : Singleton<NightmareManager> {
 
     public void Swell()
     {
-        Flood.Instance.NextWaterCount(iWaterNumber);
+        floodInstance.NextWaterCount(iWaterNumber);
     }
 }

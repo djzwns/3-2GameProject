@@ -19,7 +19,6 @@ public class EndCredit : MonoBehaviour {
             if (text.gameObject.transform.parent.name != "Canvas")
             {
                 parent = text.gameObject.transform.parent.GetComponent<Text>();
-                Debug.Log(parent.text);
             }
 
             // 나타남

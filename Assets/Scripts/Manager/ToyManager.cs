@@ -1,13 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class ToyManager : Singleton<ToyManager>
 {
     private int iPiecesOfToy;
-    private int iSceneIndex;
     public int iPiecesCount { get; private set; }
     public int iCurrentToyCount { get; private set; }
+
+    public GUIStyle style;
+    float fWidth;
+    float fHeight;
+    float fMarginx = 10f;
+    float fMarginy = 10f;
+    bool bClear = false;
+
+    StageManager sm;
 
     // Use this for initialization
     void Awake ()
@@ -15,7 +21,11 @@ public class ToyManager : Singleton<ToyManager>
         iCurrentToyCount = 3;
         iPiecesOfToy = FindObjectsOfType(typeof(ToyPiece)).Length;
         iPiecesCount = iPiecesOfToy;
-        iSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+
+        fWidth = Screen.width * 0.25f;
+        fHeight = Screen.height * 0.2f;
+
+        sm = StageManager.Instance;
     }
 
     public void CollectToy()
@@ -26,21 +36,18 @@ public class ToyManager : Singleton<ToyManager>
 
     void OnGUI()
     {
-        // 장난감 조각 현황?
-        GUI.Box(new Rect(Screen.width - 150, 30, 120, 30), iPiecesOfToy - iPiecesCount + "/" + iPiecesOfToy);
+        // 장난감 조각 GUI
+        if (!sm.bEnd)
+        {
+            GUI.BeginGroup(new Rect(Screen.width - fWidth - fMarginx, fMarginy, fWidth, fHeight));
+            GUI.Label(new Rect(0, 0, fWidth, fHeight), iPiecesOfToy - iPiecesCount + " / " + iPiecesOfToy, style);
+            GUI.EndGroup();
+        }
 
-        // clear 시
+        // clear 시 GUI
         if (iPiecesCount == 0)
         {
-            if (GUI.Button(new Rect(Screen.width * 0.5f - 60, Screen.height * 0.5f, 120, 30), "Clear"))
-            {
-                int index = iSceneIndex;
-                if (index != 100)
-                    SceneManager.LoadScene(index);
-                else
-                {
-                }
-            }
+            sm.Clear();
         }
     }
 }

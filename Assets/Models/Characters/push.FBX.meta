@@ -30,6 +30,7 @@ ModelImporter:
     100044: Bip002 Spine
     100046: Bip002 Spine1
     100048: //RootNode
+    100050: Bip002 Footsteps
     400000: Bip002
     400002: Bip002 Head
     400004: Bip002 L Calf
@@ -55,6 +56,7 @@ ModelImporter:
     400044: Bip002 Spine
     400046: Bip002 Spine1
     400048: //RootNode
+    400050: Bip002 Footsteps
     7400000: Push
     9500000: //RootNode
   materials:

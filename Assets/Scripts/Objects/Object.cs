@@ -76,11 +76,11 @@ public class Object : MonoBehaviour {
                 if (PullnPush() < 0)
                 {
                     //vTargetPosition = new Vector3(player.transform.position.x, myTransform.position.y);
-                    myTransform.position = Vector3.Lerp(myTransform.position, vTargetPosition, Time.deltaTime * 2f);
+                    myTransform.position = Vector3.Lerp(myTransform.position, vTargetPosition, Time.deltaTime * 2.2f);
                 }
                 else if (PullnPush() > 0)
                 {
-                    myTransform.position = new Vector3(myTransform.position.x - fGapX * 0.04f, myTransform.position.y);
+                    myTransform.position = new Vector3(myTransform.position.x - fGapX * 0.04f, myTransform.position.y, myTransform.position.z);
                 }
             }
         }
@@ -176,7 +176,7 @@ public class Object : MonoBehaviour {
     {
         if (coll.tag == "Player")
         {
-            vTargetPosition = new Vector3(coll.GetComponents<Collider>()[1].bounds.center.x, myTransform.position.y);
+            vTargetPosition = new Vector3(coll.GetComponents<Collider>()[1].bounds.center.x, myTransform.position.y, myTransform.position.z);
             CanPull = true;
         }
     }

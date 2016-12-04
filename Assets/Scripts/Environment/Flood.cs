@@ -2,6 +2,14 @@
 using System.Collections;
 
 public class Flood : Singleton<Flood> {
+    public enum RainType
+    {
+        DRIZZLE = 0,
+        MODERATE = 1,
+        HEAVY = 2,
+        NONE = 4,
+    }
+
     float spendTime = 0f;
     float limitTime = 2.0f;
 
@@ -10,25 +18,79 @@ public class Flood : Singleton<Flood> {
     Transform myTransform;
     float fPlayerYSize;
 
+    public GameObject[] rain;
     public Transform[] floodPosition;
     public float fFloodSpeed = 1f;
     int iFloodCount = 0;
+
+    public RainType eRainType { get; private set; }
 
     void Start()
     {
         playerTransform = PlayerController.Instance.transform;
         myTransform = transform;
         fPlayerYSize = playerTransform.GetComponent<Collider>().bounds.size.y * 0.5f;
+
+        StartCoroutine(RainDrop());
     }
 
-    void Swell()
+    // 비의 변화에 따라 활성/비활성화
+    IEnumerator RainDrop()
+    {
+        while (true)
+        {
+            switch (eRainType)
+            {
+                case RainType.DRIZZLE:
+                    rain[(int)RainType.DRIZZLE].SetActive(true);
+                    rain[(int)RainType.MODERATE].SetActive(false);
+                    rain[(int)RainType.HEAVY].SetActive(false);
+                    break;
+
+                case RainType.MODERATE:
+                    rain[(int)RainType.DRIZZLE].SetActive(false);
+                    rain[(int)RainType.MODERATE].SetActive(true);
+                    rain[(int)RainType.HEAVY].SetActive(false);
+                    break;
+
+                case RainType.HEAVY:
+                    rain[(int)RainType.DRIZZLE].SetActive(false);
+                    rain[(int)RainType.MODERATE].SetActive(false);
+                    rain[(int)RainType.HEAVY].SetActive(true);
+                    break;
+
+                case RainType.NONE:
+                    foreach (var _rain in rain)
+                    {
+                        if (_rain.activeSelf)
+                            _rain.SetActive(false);
+                    }
+                    break;
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    RainType Swell()
     {
         myTransform.position = Vector3.Lerp(myTransform.position, floodPosition[iFloodCount].position, Time.deltaTime * fFloodSpeed);
+
+        float fRainFall = Mathf.Abs(myTransform.position.y - floodPosition[iFloodCount].position.y);
+
+        // 강수량 따라 비 타입 변경
+        if (fRainFall >= 10)
+            return RainType.HEAVY;
+        else if (2 < fRainFall && fRainFall < 10)
+            return RainType.MODERATE;
+        else if (0.1 < fRainFall && fRainFall <= 2)
+            return RainType.DRIZZLE;
+        else
+            return RainType.NONE;
     }
 
     void FixedUpdate()
     {
-        Swell();
+        eRainType = Swell();
         if (player != null)
         {
             if (myTransform.position.y >= playerTransform.position.y + fPlayerYSize)
@@ -79,7 +141,7 @@ public class Flood : Singleton<Flood> {
                 EnumFlagAttribute.HasFlag(coll.GetComponent<Object>().eInter, Object.EEnvironmentAction.Water))
             {
                 Transform obj = coll.transform;
-                obj.position = new Vector3(obj.position.x, myTransform.position.y);
+                obj.position = new Vector3(obj.position.x, myTransform.position.y, obj.position.z);
             }
         }
 
