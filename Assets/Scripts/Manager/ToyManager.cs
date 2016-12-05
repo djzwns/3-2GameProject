@@ -11,7 +11,6 @@ public class ToyManager : Singleton<ToyManager>
     float fHeight;
     float fMarginx = 10f;
     float fMarginy = 10f;
-    bool bClear = false;
 
     StageManager sm;
 

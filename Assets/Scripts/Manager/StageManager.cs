@@ -22,7 +22,7 @@ public class StageManager : Singleton<StageManager> {
     public void Fail()
     {
         StartCoroutine(FailGame());
-    }    
+    }
 
     // 화면 어둡게
     public IEnumerator FadeOut(float speed)
@@ -62,5 +62,10 @@ public class StageManager : Singleton<StageManager> {
         yield return new WaitForSecondsRealtime(0.5f);
         SceneManager.LoadScene(iNextSceneIndex - 1);
         bEnd = false;
+    }
+
+    public void GotoMain()
+    {
+        SceneManager.LoadScene("Main");
     }
 }

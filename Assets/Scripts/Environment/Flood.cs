@@ -75,7 +75,7 @@ public class Flood : Singleton<Flood> {
     {
         myTransform.position = Vector3.Lerp(myTransform.position, floodPosition[iFloodCount].position, Time.deltaTime * fFloodSpeed);
 
-        float fRainFall = Mathf.Abs(myTransform.position.y - floodPosition[iFloodCount].position.y);
+        float fRainFall = floodPosition[iFloodCount].position.y - myTransform.position.y;
 
         // 강수량 따라 비 타입 변경
         if (fRainFall >= 10)

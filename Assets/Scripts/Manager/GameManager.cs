@@ -20,12 +20,18 @@ public class GameManager : Singleton<GameManager> {
 
     bool isPause = false;
     public GUIStyle style;
+    public GUIStyle button;
+    float buttonWidth;
+    float buttonHeight;
 
     void Start()
     {
         player = ScriptableObject.CreateInstance<Player>();//new Player();
         tm = ToyManager.Instance;
         sm = StageManager.Instance;
+
+        buttonWidth = Screen.width * 0.172f;
+        buttonHeight = Screen.height * 0.083f;
     }
 
     void Update()
@@ -59,6 +65,14 @@ public class GameManager : Singleton<GameManager> {
             if (isPause)
             {
                 GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height), style);
+                if (GUI.Button(new Rect(Screen.width * 0.5f - buttonWidth * 1.3f, Screen.height * 0.5f + buttonHeight + 33f, buttonWidth, buttonHeight), "메인메뉴", button))
+                {
+                    sm.GotoMain();
+                }
+                if (GUI.Button(new Rect(Screen.width * 0.5f + buttonWidth * 0.2f, Screen.height * 0.5f + buttonHeight + 33f, buttonWidth, buttonHeight), "계속하기", button))
+                {
+                    isPause = false;
+                }
                 GUI.EndGroup();
             }
         }

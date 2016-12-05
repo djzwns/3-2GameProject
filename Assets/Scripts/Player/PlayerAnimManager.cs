@@ -13,24 +13,45 @@ public class PlayerAnimManager : Singleton<PlayerAnimManager> {
 
     public void Walk(float _horizon)
     {
-        if (_horizon > 0)
+        if (!anim.GetBool("IsClimb"))
         {
-            anim.SetBool("IsWalk", true);
-            if(PlayerController.Instance.IsPull() == 0)
-                transform.rotation = Quaternion.Euler(0f, 90f, 0f);
-            //transform.Rotate(0f, 90f * Time.deltaTime, 0f);
+            if (_horizon > 0)
+            {
+                anim.SetBool("IsWalk", true);
+                if (PlayerController.Instance.IsPull() == 0)
+                    transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+                //transform.Rotate(0f, 90f * Time.deltaTime, 0f);
+            }
+            else if (_horizon < 0)
+            {
+                anim.SetBool("IsWalk", true);
+                if (PlayerController.Instance.IsPull() == 0)
+                    transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+                //transform.Rotate(0f, -90f * Time.deltaTime, 0f);
+            }
+            else
+            {
+                anim.SetBool("IsWalk", false);
+            }
         }
-        else if (_horizon < 0)
-        {
-            anim.SetBool("IsWalk", true);
-            if (PlayerController.Instance.IsPull() == 0)
-                transform.rotation = Quaternion.Euler(0f, -90f, 0f);
-            //transform.Rotate(0f, -90f * Time.deltaTime, 0f);
-        }
-        else
-        {
-            anim.SetBool("IsWalk", false);
-        }
+    }
+
+    public void Hit()
+    {
+        StartCoroutine(Hit_());
+    }
+
+    public bool IsHit()
+    {
+        return anim.GetBool("IsHit");
+    }
+    IEnumerator Hit_()
+    {
+        anim.SetBool("IsHit", true);
+
+        yield return new WaitForFixedUpdate();
+
+        anim.SetBool("IsHit", false);
     }
 
     public void Jump(bool _jump)

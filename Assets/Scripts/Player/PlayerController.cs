@@ -37,6 +37,9 @@ public class PlayerController : Singleton<PlayerController> {
     void Update()
     {
         bPulling = Input.GetButton("PullPush");
+        if(!bPulling)
+            anim.Push(false);
+
         bRotating = Input.GetButton("Rotation");
     }
 	

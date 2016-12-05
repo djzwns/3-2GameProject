@@ -31,25 +31,32 @@ public class Object : MonoBehaviour {
 
     public float fMovePower = 2.0f;
     public float fDestroyTime = 1.0f;
+    float power;
 
     int iPlayerPulling;
     bool bRotating = false;
     bool CanPull = false;
 
     PlayerController player;
+    CapsuleCollider attachCollider;
+    PlayerAnimManager anim;
     EarthQuake eq;
 
     Quaternion target;
 
     Transform myTransform;
-    Vector3 vTargetPosition;
+    Collider myCollider;
 
     float fGapX;
 
     // Use this for initialization
     void Awake () {
         myTransform = transform;
+        myCollider = GetComponent<Collider>();
+
         player = GameObject.Find("Player").GetComponent<PlayerController>();
+        attachCollider = player.GetComponent<CapsuleCollider>();
+        anim = PlayerAnimManager.Instance;
 
         if (EnumFlagAttribute.HasFlag(eInter, EEnvironmentAction.Earth))
             eq = GameObject.Find("Camera").GetComponent<EarthQuake>();
@@ -62,7 +69,7 @@ public class Object : MonoBehaviour {
         Follow();
 
         QuakeMove();
-	}
+    }
 
     void Follow()
     {
@@ -76,11 +83,14 @@ public class Object : MonoBehaviour {
                 if (PullnPush() < 0)
                 {
                     //vTargetPosition = new Vector3(player.transform.position.x, myTransform.position.y);
-                    myTransform.position = Vector3.Lerp(myTransform.position, vTargetPosition, Time.deltaTime * 2.2f);
+
+                    myTransform.position = new Vector3(myTransform.position.x + fGapX * power, myTransform.position.y, myTransform.position.z); //Vector3.Lerp(myTransform.position, vTargetPosition, Time.deltaTime * 2.2f);
+                    anim.Push(true);
                 }
                 else if (PullnPush() > 0)
                 {
-                    myTransform.position = new Vector3(myTransform.position.x - fGapX * 0.04f, myTransform.position.y, myTransform.position.z);
+                    myTransform.position = new Vector3(myTransform.position.x - fGapX * power, myTransform.position.y, myTransform.position.z);
+                    anim.Push(true);
                 }
             }
         }
@@ -90,7 +100,7 @@ public class Object : MonoBehaviour {
     {
         if (eq != null && eq.Quaking())
         {
-            myTransform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
+            myTransform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionY;
             if (EnumFlagAttribute.HasFlag(eEarthAction, EQuakeAction.Left))
             {
                 myTransform.Translate(Vector3.left * fMovePower * Time.deltaTime);
@@ -124,20 +134,22 @@ public class Object : MonoBehaviour {
     int PullnPush()
     {
         // x좌표의 차이, 음수 값이면 플레이어가 왼쪽
-        fGapX = player.transform.position.x - myTransform.position.x;
+        fGapX = attachCollider.bounds.center.x - myCollider.bounds.center.x;
+        // 약 0.056 의 비율로 힘을 넣어줘야 밀고 당기는게 자연스러워진다. ㅂㄷㅂㄷ
+        power = Mathf.Abs(0.056f / fGapX);
 
-        // 당길 때
+        // 왼쪽에서 당길 때
         if (fGapX < 0 && iPlayerPulling < 0)
             return -1;
-
+        // 오른쪽에서 당길 때
         if (fGapX > 0 && iPlayerPulling > 0)
             return -1;
 
 
-        // 밀 때
+        // 왼쪽에서 밀 때
         if (fGapX < 0 && iPlayerPulling > 0)
             return 1;
-
+        // 오른쪽에서 밀 때
         if (fGapX > 0 && iPlayerPulling < 0)
             return 1;
 
@@ -156,6 +168,7 @@ public class Object : MonoBehaviour {
                 {
                     target = Quaternion.Euler(Vector3.up * 90f) * myTransform.rotation;
                     bRotating = true;
+                    anim.Hit();
                 }
                 
                 // 회전 시키는 부분.
@@ -176,7 +189,6 @@ public class Object : MonoBehaviour {
     {
         if (coll.tag == "Player")
         {
-            vTargetPosition = new Vector3(coll.GetComponents<Collider>()[1].bounds.center.x, myTransform.position.y, myTransform.position.z);
             CanPull = true;
         }
     }
