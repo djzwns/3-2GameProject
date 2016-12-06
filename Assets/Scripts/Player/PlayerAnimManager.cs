@@ -2,9 +2,10 @@
 using System.Collections;
 
 public class PlayerAnimManager : Singleton<PlayerAnimManager> {
-    public Animator anim;
 
-    public float fDanceTime;
+    float fDanceTime = 2f;
+
+    public Animator anim;
     
     public void Push(bool _push)
     {
@@ -62,8 +63,8 @@ public class PlayerAnimManager : Singleton<PlayerAnimManager> {
     public void Climb(bool _climb)
     {
         anim.SetBool("IsClimb", _climb);
-        if(_climb)
-            transform.rotation = Quaternion.Euler(0f, 180, 0f);
+        //if(_climb)
+        //    transform.rotation = Quaternion.Euler(0f, 180, 0f);
 
     }
 
@@ -77,8 +78,9 @@ public class PlayerAnimManager : Singleton<PlayerAnimManager> {
         anim.SetBool("IWannaDance", true);
     }
 
-    public void DanceStop()
+    IEnumerator DanceStop()
     {
+        yield return new WaitForSeconds(fDanceTime);
         anim.SetBool("IWannaDance", false);
     }
 }

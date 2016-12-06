@@ -8,10 +8,13 @@ public class StageManager : Singleton<StageManager> {
     Image image;
     public bool bEnd { get; private set; }
 
+    BGMManager bgm;
+
     void Start()
     {
         iNextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
         image = GameObject.Find("blind").GetComponent<Image>();
+        bgm = BGMManager.Instance;
     }
 
     public void Clear()
@@ -50,6 +53,7 @@ public class StageManager : Singleton<StageManager> {
         yield return FadeOut(0.5f);
 
         yield return new WaitForSecondsRealtime(0.5f);
+        bgm.NextBGM();
         SceneManager.LoadScene(iNextSceneIndex);
         bEnd = false;
     }
@@ -60,12 +64,15 @@ public class StageManager : Singleton<StageManager> {
         yield return FadeOut(0.5f);
 
         yield return new WaitForSecondsRealtime(0.5f);
+        bgm.BGMChange(iNextSceneIndex - 1);
         SceneManager.LoadScene(iNextSceneIndex - 1);
         bEnd = false;
     }
 
+    // 메인으로 돌아가기
     public void GotoMain()
     {
+        bgm.BGMChange(1);   // 1번은 메인화면 인덱스 번호
         SceneManager.LoadScene("Main");
     }
 }

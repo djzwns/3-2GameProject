@@ -119,17 +119,6 @@ public class Object : MonoBehaviour {
             }
         }
     }
-
-    void UnFreezeObject()
-    {
-        myTransform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionX ^ RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotationZ;
-    }
-
-    void FreezeObject()
-    {
-        myTransform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-    }
-
     
     int PullnPush()
     {

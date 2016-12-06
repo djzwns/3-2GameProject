@@ -38,7 +38,8 @@ public class Door : MonoBehaviour {
     {
         if (coll.tag == "Player" && player.bRotating && !bMoving)
         {
-            StartCoroutine("MoveNextDoor");
+            if(linkedDoor != null)
+                StartCoroutine("MoveNextDoor");
         }
     }
 }
