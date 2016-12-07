@@ -15,7 +15,7 @@ public class BGMManager : Singleton<BGMManager> {
     {
         DontDestroyOnLoad(gameObject);
         bgmCount = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log(bgmCount);
+
         source = GetComponent<AudioSource>();
         source.clip = bgm[bgmCount];
         source.Play();
@@ -27,7 +27,6 @@ public class BGMManager : Singleton<BGMManager> {
         if (bCanChange)
         {
             bgmCount = num;
-            Debug.Log(bgmCount);
             StartCoroutine(ChangeBGM(num));
         }      
     }
@@ -35,7 +34,8 @@ public class BGMManager : Singleton<BGMManager> {
     // 오디오 클립을 이용한 bgm 변경
     public void BGMChange(AudioClip clip)
     {
-        if (bCanChange)
+        // 바꾸려는 음악이 같은 음악이 아니면 변경
+        if (clip != source.clip)
         {
             StartCoroutine(ChangeBGM(clip));
         }
@@ -44,7 +44,11 @@ public class BGMManager : Singleton<BGMManager> {
     // 원래 bgm 으로 되돌리기
     public void PrevBGM()
     {
-        StartCoroutine(ChangeBGM(bgmCount));
+        // 되돌리는데 원래 음악이 아니면 변경
+        if (bgm[bgmCount] != source.clip)
+        {
+            StartCoroutine(ChangeBGM(bgmCount));
+        }
     }
 
     public void NextBGM()
@@ -54,11 +58,14 @@ public class BGMManager : Singleton<BGMManager> {
             ++bgmCount;
             if (bgmCount >= bgm.Length)
                 bgmCount = 0;
-
-            Debug.Log(bgmCount);
-            if (bCanChange)
-                StartCoroutine(ChangeBGM(bgmCount));
+            
+            StartCoroutine(ChangeBGM(bgmCount));
         }
+    }
+
+    public void Play()
+    {
+        StartCoroutine(FadeIn(fliptime));
     }
 
     public void Mute()
@@ -82,7 +89,7 @@ public class BGMManager : Singleton<BGMManager> {
     IEnumerator FadeIn(float time)
     {
         source.Play();
-        while (source.volume < 0.5f)
+        while (source.volume < 1f)
         {
             source.volume += 0.1f;
 

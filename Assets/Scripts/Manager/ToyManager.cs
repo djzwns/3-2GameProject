@@ -2,15 +2,9 @@
 
 public class ToyManager : Singleton<ToyManager>
 {
-    private int iPiecesOfToy;
+    public int iPiecesOfToy { get; private set; }
     public int iPiecesCount { get; private set; }
     public int iCurrentToyCount { get; private set; }
-
-    public GUIStyle style;
-    float fWidth;
-    float fHeight;
-    float fMarginx = 10f;
-    float fMarginy = 10f;
 
     StageManager sm;
 
@@ -19,10 +13,7 @@ public class ToyManager : Singleton<ToyManager>
     {
         iCurrentToyCount = 3;
         iPiecesOfToy = FindObjectsOfType(typeof(ToyPiece)).Length;
-        iPiecesCount = iPiecesOfToy;
-
-        fWidth = Screen.width * 0.25f;
-        fHeight = Screen.height * 0.2f;
+        iPiecesCount = iPiecesOfToy;        
 
         sm = StageManager.Instance;
     }
@@ -33,17 +24,8 @@ public class ToyManager : Singleton<ToyManager>
             --iPiecesCount;
     }
 
-    void OnGUI()
+    void Update()
     {
-        // 장난감 조각 GUI
-        if (!sm.bEnd)
-        {
-            GUI.BeginGroup(new Rect(Screen.width - fWidth - fMarginx, fMarginy, fWidth, fHeight));
-            GUI.Label(new Rect(0, 0, fWidth, fHeight), iPiecesOfToy - iPiecesCount + " / " + iPiecesOfToy, style);
-            GUI.EndGroup();
-        }
-
-        // clear 시 GUI
         if (iPiecesCount == 0)
         {
             sm.Clear();

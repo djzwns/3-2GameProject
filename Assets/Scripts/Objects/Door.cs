@@ -10,6 +10,8 @@ public class Door : MonoBehaviour {
     // 이동 중 체크용 불리언 변수
     static bool bMoving = false;
 
+    public float fadeTime = 0.08f;
+
     PlayerController player;
 
     void Start()
@@ -22,14 +24,14 @@ public class Door : MonoBehaviour {
         bMoving = true;
 
         // 어두짐
-        yield return StageManager.Instance.FadeOut(0.05f);
+        yield return StageManager.Instance.FadeOut(fadeTime);
 
         // 플레이어 위치 이동
         player.transform.position = linkedDoor.position;
         player.fFixedZ = linkedDoor.GetComponent<Collider>().bounds.center.z;
 
         // 밝아짐
-        yield return StageManager.Instance.FadeIn(0.05f);
+        yield return StageManager.Instance.FadeIn(fadeTime);
 
         bMoving = false;
     }

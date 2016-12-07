@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NightmareManager : Singleton<NightmareManager> {
-    
+public class NightmareManager : Singleton<NightmareManager>
+{
+    public GameObject nightmare;
+
+    // 불의 위치와 불 프리팹
     public Transform[] firePositions;
     public GameObject[] fire;
     
-    public int iWaterNumber;
+    // 물이 차오르는 수준
+    public int iWaterLevel;
 
     Flood floodInstance;
 
@@ -15,6 +19,7 @@ public class NightmareManager : Singleton<NightmareManager> {
         floodInstance = Flood.Instance;
     }
 
+    // 대화창에서 사용될 함수들.. ===
     public void Quake()
     {
         EarthQuake.Instance.Quake();
@@ -36,6 +41,21 @@ public class NightmareManager : Singleton<NightmareManager> {
 
     public void Swell()
     {
-        floodInstance.NextWaterCount(iWaterNumber);
+        floodInstance.NextWaterCount(iWaterLevel);
+    }
+    // ================================
+
+    // 악몽의 등장
+    public void HeisComing()
+    {
+        if(!nightmare.activeSelf)
+            nightmare.SetActive(true);
+    }
+
+    // 퇴장
+    public void HeisGone()
+    {
+        if (nightmare.activeSelf)
+            nightmare.SetActive(false);
     }
 }

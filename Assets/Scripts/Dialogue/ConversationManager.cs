@@ -11,6 +11,7 @@ public class ConversationManager : Singleton<ConversationManager> {
     ConversationBase currentConversation;
     string oldFuncName;
     public string leftName;
+    public float faceSize = 0.8f;
 
     int iTextboxWidth = Screen.width;
     int iTextboxHeight = (int)(Screen.height * 0.25f);
@@ -53,11 +54,14 @@ public class ConversationManager : Singleton<ConversationManager> {
         {
             currentConversation = conversationLine;
             iNameTextLength = currentConversation.SpeakingCharacterName.Length * 7;
-            
+
+            NightmareManager.Instance.HeisComing();
             Disaster(currentConversation.FunctionName);
 
             yield return new WaitForSeconds(textPassTime);
         }
+
+        NightmareManager.Instance.HeisGone();
         player.bTalking = bTalking = false;
     }
 
@@ -71,11 +75,13 @@ public class ConversationManager : Singleton<ConversationManager> {
             currentConversation = conversation.conversationLines[iLineNumber];
             iNameTextLength = currentConversation.SpeakingCharacterName.Length * 7;
 
+            NightmareManager.Instance.HeisComing();
             Disaster(currentConversation.FunctionName);
 
             yield return new WaitForFixedUpdate();
         }
 
+        NightmareManager.Instance.HeisGone();
         player.bTalking = bTalking = false;
     }
 
@@ -105,8 +111,8 @@ public class ConversationManager : Singleton<ConversationManager> {
     {
         if (bTalking)
         {
-            float textureWidth = currentConversation.DisplayTexture.width;
-            float textureHeight = currentConversation.DisplayTexture.height;
+            float textureWidth = currentConversation.DisplayTexture.width * faceSize;
+            float textureHeight = currentConversation.DisplayTexture.height * faceSize;
 
             // 이미지 띄우기
             if (currentConversation.SpeakingCharacterName != leftName)
