@@ -50,7 +50,7 @@ public class StageManager : Singleton<StageManager> {
         bEnd = true;
         yield return FadeOut(0.5f);
 
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(0.6f);
         SceneManager.LoadScene(iNextSceneIndex);
         bEnd = false;
     }
@@ -60,7 +60,7 @@ public class StageManager : Singleton<StageManager> {
         bEnd = true;
         yield return FadeOut(0.5f);
 
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(0.6f);
         SceneManager.LoadScene(iNextSceneIndex - 1);
         bEnd = false;
     }

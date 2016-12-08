@@ -76,6 +76,7 @@ public class PlayerAnimManager : Singleton<PlayerAnimManager> {
     public void Dance()
     {
         anim.SetBool("IWannaDance", true);
+        StartCoroutine(DanceStop());
     }
 
     IEnumerator DanceStop()
