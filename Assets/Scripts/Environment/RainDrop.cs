@@ -15,6 +15,6 @@ public class RainDrop : MonoBehaviour {
     // 플레이어 머리 위를 따라다닌다.
     void FixedUpdate()
     {
-        myTransform.position = new Vector3(player.position.x, player.position.y + 10f);
+        myTransform.position = new Vector3(player.position.x, player.position.y + 10f, player.position.z);
     }
 }

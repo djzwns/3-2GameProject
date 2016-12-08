@@ -4,6 +4,7 @@ using System.Collections;
 public class ConversationManager : Singleton<ConversationManager> {
 
     public GUIStyle style;
+    public GUIStyle font;
 
     bool bTalking = false;
     bool bNextText = false;
@@ -55,7 +56,8 @@ public class ConversationManager : Singleton<ConversationManager> {
             currentConversation = conversationLine;
             iNameTextLength = currentConversation.SpeakingCharacterName.Length * 7;
 
-            NightmareManager.Instance.HeisComing();
+            if(currentConversation.SpeakingCharacterName == "악몽")
+                NightmareManager.Instance.HeisComing();
             Disaster(currentConversation.FunctionName);
 
             yield return new WaitForSeconds(textPassTime);
@@ -75,7 +77,8 @@ public class ConversationManager : Singleton<ConversationManager> {
             currentConversation = conversation.conversationLines[iLineNumber];
             iNameTextLength = currentConversation.SpeakingCharacterName.Length * 7;
 
-            NightmareManager.Instance.HeisComing();
+            if (currentConversation.SpeakingCharacterName == "악몽")
+                NightmareManager.Instance.HeisComing();
             Disaster(currentConversation.FunctionName);
 
             yield return new WaitForFixedUpdate();
@@ -124,13 +127,13 @@ public class ConversationManager : Singleton<ConversationManager> {
             GUI.BeginGroup(new Rect(0, Screen.height - iTextboxHeight, iTextboxWidth, iTextboxHeight), style);
 
             // 대화창 뒷배경
-            GUI.Box(new Rect(0, 0, iTextboxWidth, iTextboxHeight), "");
+            //GUI.Box(new Rect(0, 0, iTextboxWidth, iTextboxHeight), "");
 
             // 이름
-            GUI.Label(new Rect(30, 20, iNameTextLength * 7f, 20), currentConversation.SpeakingCharacterName);
+            GUI.Label(new Rect(30, 20, iNameTextLength * 7f, 20), currentConversation.SpeakingCharacterName, font);
 
             // 대화
-            GUI.Label(new Rect(50, 40, iTextboxWidth, 20), currentConversation.ConversationText);
+            GUI.Label(new Rect(50, 40, iTextboxWidth, 20), currentConversation.ConversationText, font);
 
             GUI.EndGroup();
         }

@@ -19,8 +19,6 @@ public class FollowCamera : MonoBehaviour {
 
     float fCamtoPlayer;
 
-    public bool bReverse = false;
-
     void Awake()
     {
         player = GameObject.Find("Player").transform;

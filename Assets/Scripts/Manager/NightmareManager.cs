@@ -56,6 +56,9 @@ public class NightmareManager : Singleton<NightmareManager>
     public void HeisGone()
     {
         if (nightmare.activeSelf)
+        {
+            nightmare.GetComponent<Nightmare>().Poof();
             nightmare.SetActive(false);
+        }
     }
 }

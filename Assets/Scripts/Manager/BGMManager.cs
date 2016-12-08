@@ -5,11 +5,10 @@ using System.Collections;
 public class BGMManager : Singleton<BGMManager> {
     int bgmCount = 0;
 
-    bool bCanChange = true;
-
     public AudioClip[] bgm;
     AudioSource source;
     float fliptime = 0.1f;
+    float pauseTime = 0f;
 
     void Awake()
     {
@@ -24,11 +23,9 @@ public class BGMManager : Singleton<BGMManager> {
     // 씬 인덱스를 이용한 bgm 변경
     public void BGMChange(int num)
     {
-        if (bCanChange)
-        {
-            bgmCount = num;
-            StartCoroutine(ChangeBGM(num));
-        }      
+        StopAllCoroutines();
+        bgmCount = num;
+        StartCoroutine(ChangeBGM(num));
     }
 
     // 오디오 클립을 이용한 bgm 변경
@@ -37,6 +34,7 @@ public class BGMManager : Singleton<BGMManager> {
         // 바꾸려는 음악이 같은 음악이 아니면 변경
         if (clip != source.clip)
         {
+            StopAllCoroutines();
             StartCoroutine(ChangeBGM(clip));
         }
     }
@@ -47,20 +45,19 @@ public class BGMManager : Singleton<BGMManager> {
         // 되돌리는데 원래 음악이 아니면 변경
         if (bgm[bgmCount] != source.clip)
         {
+            StopAllCoroutines();
+            source.SetScheduledStartTime(pauseTime);
             StartCoroutine(ChangeBGM(bgmCount));
         }
     }
 
     public void NextBGM()
     {
-        if (bCanChange)
-        {
             ++bgmCount;
             if (bgmCount >= bgm.Length)
                 bgmCount = 0;
             
             StartCoroutine(ChangeBGM(bgmCount));
-        }
     }
 
     public void Play()
@@ -83,6 +80,7 @@ public class BGMManager : Singleton<BGMManager> {
             yield return new WaitForSecondsRealtime(time);
         }
         source.Pause();
+        pauseTime = source.time;
     }
 
     // 재생 시키면서 볼륨을 올린다.
@@ -99,23 +97,19 @@ public class BGMManager : Singleton<BGMManager> {
 
     IEnumerator ChangeBGM(AudioClip clip)
     {
-        bCanChange = false;
         yield return FadeOut(fliptime);
 
         source.clip = clip;
 
         yield return FadeIn(fliptime);
-        bCanChange = true;
     }
 
     IEnumerator ChangeBGM(int num)
     {
-        bCanChange = false;
         yield return FadeOut(fliptime);
 
         source.clip = bgm[num];
 
         yield return FadeIn(fliptime);
-        bCanChange = true;
     }
 }

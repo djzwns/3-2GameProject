@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class PlayerController : Singleton<PlayerController> {
+    public GameObject conditionEffect;
+
     PlayerAnimManager anim;
 
     public float fSpeed = 5f;
@@ -21,7 +23,7 @@ public class PlayerController : Singleton<PlayerController> {
     public bool bTalking { get; set; }
     public bool bRotating {get; private set;}
 
-    bool bReverse;
+    bool bReverse = false;
 
     
 	void Awake () {
@@ -31,7 +33,6 @@ public class PlayerController : Singleton<PlayerController> {
         bTalking = false;
 
         fFixedZ = transform.position.z;
-        bReverse = GameObject.Find("Camera").GetComponent<FollowCamera>().bReverse;
 	}
 
     void Update()
@@ -134,5 +135,11 @@ public class PlayerController : Singleton<PlayerController> {
     public void Die()
     {
         bDead = true;
+    }
+
+    public void Confuse(bool confuse)
+    {
+        bReverse = confuse;
+        conditionEffect.SetActive(confuse);
     }
 }

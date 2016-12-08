@@ -31,7 +31,8 @@ public class Flood : Singleton<Flood> {
         myTransform = transform;
         fPlayerYSize = playerTransform.GetComponent<Collider>().bounds.size.y * 0.5f;
 
-        StartCoroutine(RainDrop());
+        if (floodPosition.Length != 0)
+            StartCoroutine(RainDrop());
     }
 
     // 비의 변화에 따라 활성/비활성화
@@ -90,7 +91,8 @@ public class Flood : Singleton<Flood> {
 
     void FixedUpdate()
     {
-        eRainType = Swell();
+        if(floodPosition.Length != 0)
+            eRainType = Swell();
         if (player != null)
         {
             if (myTransform.position.y >= playerTransform.position.y + fPlayerYSize)
