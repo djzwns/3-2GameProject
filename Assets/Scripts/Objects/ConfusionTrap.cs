@@ -11,7 +11,7 @@ public class ConfusionTrap : MonoBehaviour {
 
     IEnumerator Confuse(bool confuse)
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.35f);
         player.Confuse(confuse);
     }
 

@@ -58,6 +58,8 @@ public class StageManager : Singleton<StageManager> {
     IEnumerator FailGame()
     {
         bEnd = true;
+
+        yield return new WaitForSecondsRealtime(1f);
         yield return FadeOut(0.5f);
 
         yield return new WaitForSecondsRealtime(0.6f);

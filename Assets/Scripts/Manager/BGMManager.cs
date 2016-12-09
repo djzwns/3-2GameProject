@@ -2,7 +2,8 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class BGMManager : Singleton<BGMManager> {
+public class BGMManager : Singleton<BGMManager>
+{
     int bgmCount = 0;
 
     public AudioClip[] bgm;
@@ -53,11 +54,12 @@ public class BGMManager : Singleton<BGMManager> {
 
     public void NextBGM()
     {
-            ++bgmCount;
-            if (bgmCount >= bgm.Length)
-                bgmCount = 0;
-            
-            StartCoroutine(ChangeBGM(bgmCount));
+        ++bgmCount;
+        if (bgmCount >= bgm.Length)
+            bgmCount = 0;
+
+        StopAllCoroutines();
+        StartCoroutine(ChangeBGM(bgmCount));
     }
 
     public void Play()

@@ -137,7 +137,7 @@ public class Flood : Singleton<Flood> {
     void OnTriggerStay(Collider coll)
     {
         // 물에 뜨는 오브젝트는 물의 높이와 같게
-        if (coll.gameObject.tag == "Object")
+        if (coll.gameObject.tag == "Object" && coll.GetComponent<Object>() != null)
         {
             if (coll.transform.position.y <= myTransform.position.y &&
                 EnumFlagAttribute.HasFlag(coll.GetComponent<Object>().eInter, Object.EEnvironmentAction.Water))
