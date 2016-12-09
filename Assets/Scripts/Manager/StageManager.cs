@@ -48,10 +48,12 @@ public class StageManager : Singleton<StageManager> {
     IEnumerator ClearGame()
     {
         bEnd = true;
-        yield return FadeOut(0.5f);
 
-        yield return new WaitForSecondsRealtime(0.6f);
+        yield return new WaitForSecondsRealtime(1f);
+        yield return FadeOut(0.5f);
         SceneManager.LoadScene(iNextSceneIndex);
+        yield return new WaitForSecondsRealtime(0.6f);
+
         bEnd = false;
     }
 
@@ -61,9 +63,9 @@ public class StageManager : Singleton<StageManager> {
 
         yield return new WaitForSecondsRealtime(1f);
         yield return FadeOut(0.5f);
-
-        yield return new WaitForSecondsRealtime(0.6f);
         SceneManager.LoadScene(iNextSceneIndex - 1);
+        yield return new WaitForSecondsRealtime(0.6f);
+
         bEnd = false;
     }
 

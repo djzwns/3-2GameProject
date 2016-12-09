@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class ConfusionTrap : MonoBehaviour {
+    public float confuseTime = 0.35f;
+
     PlayerController player;
 
     void Start()
@@ -11,7 +13,7 @@ public class ConfusionTrap : MonoBehaviour {
 
     IEnumerator Confuse(bool confuse)
     {
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(confuseTime);
         player.Confuse(confuse);
     }
 

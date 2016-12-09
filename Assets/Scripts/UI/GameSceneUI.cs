@@ -60,10 +60,12 @@ public class GameSceneUI : MonoBehaviour
                     GUI.DrawTexture(new Rect(UIMarginW + (lifeIconSize * i), UIMarginH, lifeIconSize, lifeIconSize), lifeIcon[1]);
             }
 
+            // 장난감 조각 상황 표시
             GUI.BeginGroup(new Rect(Screen.width - toybarWidth - UIMarginW, UIMarginH, toybarWidth, toybarHeight));
             GUI.Label(new Rect(0, 0, toybarWidth, toybarHeight), tm.iPiecesOfToy - tm.iPiecesCount + " / " + tm.iPiecesOfToy, toyBar);
             GUI.EndGroup();
 
+            // 일시정지시 UI
             if (gm.isPause)
             {
                 GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height), style);
@@ -77,13 +79,6 @@ public class GameSceneUI : MonoBehaviour
                 }
                 GUI.EndGroup();
             }
-        }
-        if (tm.iPiecesCount > 0 && player.CurrentLife <= 0)
-        {
-            PlayerAnimManager.Instance.Die();
-            PlayerController.Instance.Die();
-
-            sm.Fail();
         }
     }
 }

@@ -17,6 +17,10 @@ public class EndCredit : MonoBehaviour {
     public RectTransform scrollEnd;
     public float scrollSpeed = 2f;
 
+    void Awake()
+    {
+        BGMManager.Instance.BGMChange(SceneManager.GetActiveScene().buildIndex);
+    }
 
     IEnumerator Start()
     {
