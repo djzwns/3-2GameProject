@@ -30,7 +30,7 @@ public class Flood : Singleton<Flood> {
         playerTransform = PlayerController.Instance.transform;
         myTransform = transform;
         fPlayerYSize = playerTransform.GetComponent<Collider>().bounds.size.y * 0.5f;
-
+        eRainType = RainType.NONE;
         if (floodPosition.Length != 0)
             StartCoroutine(RainDrop());
     }
@@ -79,11 +79,11 @@ public class Flood : Singleton<Flood> {
         float fRainFall = floodPosition[iFloodCount].position.y - myTransform.position.y;
 
         // 강수량 따라 비 타입 변경
-        if (fRainFall >= 10)
+        if (fRainFall > 20)
             return RainType.HEAVY;
-        else if (2 < fRainFall && fRainFall < 10)
+        else if (6 < fRainFall && fRainFall <= 20)
             return RainType.MODERATE;
-        else if (0.1 < fRainFall && fRainFall <= 2)
+        else if (3 < fRainFall && fRainFall <= 6)
             return RainType.DRIZZLE;
         else
             return RainType.NONE;

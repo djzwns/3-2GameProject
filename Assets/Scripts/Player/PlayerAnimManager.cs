@@ -63,8 +63,8 @@ public class PlayerAnimManager : Singleton<PlayerAnimManager> {
     public void Climb(bool _climb)
     {
         anim.SetBool("IsClimb", _climb);
-        //if(_climb)
-        //    transform.rotation = Quaternion.Euler(0f, 180, 0f);
+        if(_climb)
+            transform.rotation = Quaternion.Euler(0f, 180, 0f);
 
     }
 

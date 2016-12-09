@@ -8,7 +8,7 @@ public class BGMManager : Singleton<BGMManager>
 
     public AudioClip[] bgm;
     AudioSource source;
-    float fliptime = 0.1f;
+    float fliptime = 0.05f;
     float pauseTime = 0f;
 
     void Awake()

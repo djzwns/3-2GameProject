@@ -12,7 +12,10 @@ public class ConversationManager : Singleton<ConversationManager> {
     ConversationBase currentConversation;
     string oldFuncName;
     public string leftName;
-    public float faceSize = 0.8f;
+    float faceSize;
+    float fontMarginW;
+    float fontMarginH;
+    float fontSpacing;
 
     int iTextboxWidth = Screen.width;
     int iTextboxHeight = (int)(Screen.height * 0.25f);
@@ -24,6 +27,12 @@ public class ConversationManager : Singleton<ConversationManager> {
     void Awake()
     {
         player = PlayerController.Instance;
+        font.fontSize = (int)(Screen.width * 0.02f);
+        faceSize = Screen.width * 0.2f;
+
+        fontMarginW = iTextboxWidth * 0.04f;
+        fontMarginH = iTextboxHeight * 0.2f;
+        fontSpacing = font.fontSize * 0.4f;
     }
 
     void Update()
@@ -114,14 +123,11 @@ public class ConversationManager : Singleton<ConversationManager> {
     {
         if (bTalking)
         {
-            float textureWidth = currentConversation.DisplayTexture.width * faceSize;
-            float textureHeight = currentConversation.DisplayTexture.height * faceSize;
-
             // 이미지 띄우기
             if (currentConversation.SpeakingCharacterName != leftName)
-                GUI.Label(new Rect(iTextboxWidth - textureWidth, Screen.height - (iTextboxHeight + textureHeight), textureWidth, textureHeight), currentConversation.DisplayTexture);
+                GUI.Label(new Rect(iTextboxWidth - faceSize, Screen.height - (iTextboxHeight + faceSize), faceSize, faceSize), currentConversation.DisplayTexture);
             else
-                GUI.Label(new Rect(0, Screen.height - (iTextboxHeight + textureHeight), textureWidth, textureHeight), currentConversation.DisplayTexture);
+                GUI.Label(new Rect(0, Screen.height - (iTextboxHeight + faceSize), faceSize, faceSize), currentConversation.DisplayTexture);
 
             // 대화창 그룹
             GUI.BeginGroup(new Rect(0, Screen.height - iTextboxHeight, iTextboxWidth, iTextboxHeight), style);
@@ -130,10 +136,10 @@ public class ConversationManager : Singleton<ConversationManager> {
             //GUI.Box(new Rect(0, 0, iTextboxWidth, iTextboxHeight), "");
 
             // 이름
-            GUI.Label(new Rect(30, 20, iNameTextLength * 7f, 20), currentConversation.SpeakingCharacterName, font);
+            GUI.Label(new Rect(fontMarginW, fontMarginH, iNameTextLength * font.fontSize, font.fontSize), currentConversation.SpeakingCharacterName, font);
 
             // 대화
-            GUI.Label(new Rect(50, 40, iTextboxWidth, 20), currentConversation.ConversationText, font);
+            GUI.Label(new Rect(fontMarginW + fontSpacing * 2f, fontMarginH + font.fontSize+ fontSpacing, iTextboxWidth, iTextboxHeight), currentConversation.ConversationText, font);
 
             GUI.EndGroup();
         }

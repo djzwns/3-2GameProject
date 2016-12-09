@@ -16,6 +16,14 @@ public class GameSceneUI : MonoBehaviour
     float buttonWidth;
     float buttonHeight;
 
+    float lifeIconSize;
+
+    float UIMarginW;
+    float UIMarginH;
+
+    float toybarWidth;
+    float toybarHeight;
+
     void Start()
     {
         tm = ToyManager.Instance;
@@ -26,6 +34,17 @@ public class GameSceneUI : MonoBehaviour
         
         buttonWidth = Screen.width * 0.172f;
         buttonHeight = Screen.height * 0.083f;
+
+        lifeIconSize = Screen.width * 0.08f;
+
+        UIMarginW = Screen.width * 0.016f;
+        UIMarginH = Screen.height * 0.016f;
+
+        toybarWidth = Screen.width * 0.25f;
+        toybarHeight = Screen.height * 0.2f;
+
+        toyBar.fontSize = (int)(Screen.width * 0.034f);
+        toyBar.contentOffset = new Vector2(-UIMarginW, 0);
     }
 
     void OnGUI()
@@ -36,15 +55,13 @@ public class GameSceneUI : MonoBehaviour
             for (int i = 0; i < player.MaxLife; ++i)
             {
                 if (i < player.CurrentLife)
-                    GUI.DrawTexture(new Rect(30 + (50 * i), 30, 50, 50), lifeIcon[0]);
+                    GUI.DrawTexture(new Rect(UIMarginW + (lifeIconSize * i), UIMarginH, lifeIconSize, lifeIconSize), lifeIcon[0]);
                 else
-                    GUI.DrawTexture(new Rect(30 + (50 * i), 30, 50, 50), lifeIcon[1]);
+                    GUI.DrawTexture(new Rect(UIMarginW + (lifeIconSize * i), UIMarginH, lifeIconSize, lifeIconSize), lifeIcon[1]);
             }
 
-            float fWidth = Screen.width * 0.25f;
-            float fHeight = Screen.height * 0.2f;
-            GUI.BeginGroup(new Rect(Screen.width - fWidth - 10f, 10f, fWidth, fHeight));
-            GUI.Label(new Rect(0, 0, fWidth, fHeight), tm.iPiecesOfToy - tm.iPiecesCount + " / " + tm.iPiecesOfToy, toyBar);
+            GUI.BeginGroup(new Rect(Screen.width - toybarWidth - UIMarginW, UIMarginH, toybarWidth, toybarHeight));
+            GUI.Label(new Rect(0, 0, toybarWidth, toybarHeight), tm.iPiecesOfToy - tm.iPiecesCount + " / " + tm.iPiecesOfToy, toyBar);
             GUI.EndGroup();
 
             if (gm.isPause)

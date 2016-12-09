@@ -8,14 +8,29 @@ public class EndCredit : MonoBehaviour {
     public float fFadeSpeed = 0.03f;
     public float fHoldTime = 1.5f;
     public float fSpeed = 0.08f;
+
     public Text[] texts;
     public Image logo;
     Text parent;
+
+    public RectTransform scroll;
+    public RectTransform scrollEnd;
+    public float scrollSpeed = 2f;
+
 
     IEnumerator Start()
     {
         yield return new WaitForSecondsRealtime(0.5f);
 
+        yield return TextFade();
+
+        yield return Scroll();
+
+        yield return LogoFade();
+    }
+
+    IEnumerator TextFade()
+    {
         foreach (Text text in texts)
         {
             if (text.gameObject.transform.parent.name != "Canvas")
@@ -28,7 +43,7 @@ public class EndCredit : MonoBehaviour {
             {
                 text.color = new Color(1, 1, 1, text.color.a + fFadeSpeed);
 
-                if(parent != null)
+                if (parent != null)
                     parent.color = new Color(1, 1, 1, parent.color.a + fFadeSpeed);
 
                 text.transform.localScale += Vector3.one * (fFadeSpeed * 0.1f);
@@ -58,8 +73,10 @@ public class EndCredit : MonoBehaviour {
 
             yield return new WaitForSecondsRealtime(fHoldTime);
         }
+    }
 
-
+    IEnumerator LogoFade()
+    {
         if (logo.GetComponentInChildren<Text>() != null)
         {
             parent = logo.GetComponentInChildren<Text>();
@@ -74,6 +91,15 @@ public class EndCredit : MonoBehaviour {
 
             logo.transform.localScale += Vector3.one * (fFadeSpeed * 0.1f);
             yield return new WaitForSecondsRealtime(fSpeed);
+        }
+    }
+
+    IEnumerator Scroll()
+    {
+        while (scroll.position.y < scrollEnd.position.y)
+        {
+            scroll.position =  new Vector3(scroll.position.x, scroll.position.y + scrollSpeed, scroll.position.z);
+            yield return new WaitForFixedUpdate();
         }
     }
 
