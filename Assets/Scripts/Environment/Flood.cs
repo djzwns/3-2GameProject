@@ -140,7 +140,7 @@ public class Flood : Singleton<Flood> {
         if (coll.gameObject.tag == "Object" && coll.GetComponent<Object>() != null)
         {
             if (coll.transform.position.y <= myTransform.position.y &&
-                EnumFlagAttribute.HasFlag(coll.GetComponent<Object>().eInter, Object.EEnvironmentAction.Water))
+                EnumFlagAttribute.HasFlag(coll.GetComponent<Object>().eInter, EEnvironmentAction.Water))
             {
                 Transform obj = coll.transform;
                 obj.position = new Vector3(obj.position.x, myTransform.position.y, obj.position.z);

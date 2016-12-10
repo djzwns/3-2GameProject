@@ -9,13 +9,14 @@ public class EndCredit : MonoBehaviour {
     public float fHoldTime = 1.5f;
     public float fSpeed = 0.08f;
 
-    public Text[] texts;
-    public Image logo;
+    public Text[] fadingTexts;
     Text parent;
 
-    public RectTransform scroll;
+    public RectTransform scrollUI;
     public RectTransform scrollEnd;
-    public float scrollSpeed = 2f;
+    public float scrollSpeed = 0.5f;
+
+    public Image logo;
 
     void Awake()
     {
@@ -35,7 +36,7 @@ public class EndCredit : MonoBehaviour {
 
     IEnumerator TextFade()
     {
-        foreach (Text text in texts)
+        foreach (Text text in fadingTexts)
         {
             if (text.gameObject.transform.parent.name != "Canvas")
             {
@@ -100,9 +101,9 @@ public class EndCredit : MonoBehaviour {
 
     IEnumerator Scroll()
     {
-        while (scroll.position.y < scrollEnd.position.y)
+        while (scrollUI.position.y < scrollEnd.position.y)
         {
-            scroll.position =  new Vector3(scroll.position.x, scroll.position.y + scrollSpeed, scroll.position.z);
+            scrollUI.position =  new Vector3(scrollUI.position.x, scrollUI.position.y + scrollSpeed, scrollUI.position.z);
             yield return new WaitForFixedUpdate();
         }
     }

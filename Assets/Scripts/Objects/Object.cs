@@ -1,30 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+public enum EEnvironmentAction
+{       // 16진수   // 2진수
+    Fire = 0x01,    // 00000001
+    Water = 0x02,   // 00000010
+    Earth = 0x04,   // 00000100
+    Wind = 0x08,    // 00001000
+}
+
+public enum EMoveAction
+{
+    Move = 0x01,    // 00000001
+    Rotate = 0x02   // 00000010
+}
+
+public enum EQuakeAction
+{
+    Left = 0x01,    // 00000001
+    Right = 0x02,   // 00000010
+    Drop = 0x04,    // 00000100
+    Destroy = 0x08  // 00001000
+}
+
 [RequireComponent(typeof(Rigidbody))]
 public class Object : MonoBehaviour {
-    
-    public enum EEnvironmentAction
-    {        // 16진수    // 2진수
-        Fire    = 0x01,   // 00000001
-        Water   = 0x02,   // 00000010
-        Earth   = 0x04,   // 00000100
-        Wind    = 0x08,   // 00001000
-    }
-
-    public enum EMoveAction
-    {
-        Move    = 0x01,   // 00000001
-        Rotate  = 0x02    // 00000010
-    }
-
-    public enum EQuakeAction
-    {
-        Left    = 0x01,   // 00000001
-        Right   = 0x02,   // 00000010
-        Drop    = 0x04,   // 00000100
-        Destroy = 0x08    // 00001000
-    }
 
     [EnumFlag] public EEnvironmentAction eInter;
     [EnumFlag] public EMoveAction eMove;

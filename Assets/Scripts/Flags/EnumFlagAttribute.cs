@@ -9,19 +9,19 @@ public class EnumFlagAttribute : PropertyAttribute {
 
 
     // a타입에 b타입이 있는지 비교
-    public static bool HasFlag(Object.EEnvironmentAction _typeA, Object.EEnvironmentAction _typeB)
+    public static bool HasFlag(EEnvironmentAction _typeA, EEnvironmentAction _typeB)
     {
         return (_typeA & _typeB) == _typeB;
     }
 
     // a타입에 b타입이 있는지 비교
-    public static bool HasFlag(Object.EMoveAction _typeA, Object.EMoveAction _typeB)
+    public static bool HasFlag(EMoveAction _typeA, EMoveAction _typeB)
     {
         return (_typeA & _typeB) == _typeB;
     }
 
     // a타입에 b타입이 있는지 비교
-    public static bool HasFlag(Object.EQuakeAction _typeA, Object.EQuakeAction _typeB)
+    public static bool HasFlag(EQuakeAction _typeA, EQuakeAction _typeB)
     {
         return (_typeA & _typeB) == _typeB;
     }

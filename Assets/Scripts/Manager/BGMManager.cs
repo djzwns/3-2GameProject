@@ -6,8 +6,9 @@ public class BGMManager : Singleton<BGMManager>
 {
     int bgmCount = 0;
 
-    public AudioClip[] bgm;
     AudioSource source;
+    public AudioClip[] bgm;
+
     float fliptime = 0.05f;
     float pauseTime = 0f;
 
